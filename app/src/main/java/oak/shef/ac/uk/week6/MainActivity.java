@@ -11,6 +11,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,10 +21,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,9 +36,14 @@ import android.util.Log;
 import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import oak.shef.ac.uk.week6.ImageElement;
@@ -48,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 2987;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 7829;
+    public static final int CAMERA_REQUEST_CODE = 228;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 4192;
+    static final int CAPTURE_IMAGE_REQUEST = 1;
     private static final String TAG = "MainActivity";
     private List<ImageElement> myPictureList = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
@@ -109,9 +121,19 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
         fab.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                EasyImage.openCamera(getActivity(), 0);
+
+                if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("cameraaa", "cameraaa");
+                    invokeCamera();
+
+                } else {
+                    // let's request permission.
+                    String[] permissionRequest = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                    requestPermissions(permissionRequest, CAMERA_PERMISSION_REQUEST_CODE);
+                }
             }
         });
 
@@ -122,6 +144,55 @@ public class MainActivity extends AppCompatActivity {
                 EasyImage.openGallery(getActivity(), 0);
             }
         });
+    }
+
+    private void invokeCamera() {
+        File photoFile = null;
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            try {
+
+                photoFile = createImageFile();
+                displayMessage(getBaseContext(),photoFile.getAbsolutePath());
+                Log.i("Mayank",photoFile.getAbsolutePath());
+
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            "oak.shef.ac.uk.week6.fileprovider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST);
+                }
+            } catch (Exception ex) {
+                // Error occurred while creating the File
+                displayMessage(getBaseContext(),ex.getMessage().toString());
+            }
+
+
+        }else
+        {
+            displayMessage(getBaseContext(),"Nullll");
+        }
+
+    }
+
+    private void displayMessage(Context context, String message)
+    {
+        Toast.makeText(context,message,Toast.LENGTH_LONG).show();
+    }
+
+    private File createImageFile() {
+        // the public picture director
+        File picturesDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // timestamp makes unique name.
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String timestamp = sdf.format(new Date());
+        // put together the directory and the timestamp to make a unique image location.
+        File imageFile = new File(picturesDirectory, "picture" + timestamp + ".jpg");
+        return imageFile;
     }
 
     private void initEasyImage() {
@@ -221,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
         mRecyclerView.scrollToPosition(returnedPhotos.size() - 1);
     }
+
 
     /**
      * given a list of photos, it creates a list of myElements
