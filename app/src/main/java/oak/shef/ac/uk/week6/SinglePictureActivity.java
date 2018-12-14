@@ -24,7 +24,7 @@ import oak.shef.ac.uk.week6.databinding.ShowPictureAndDataBinding;
  * THIS IS A VIEW in MVVM!!
  */
 
-public class ShowImageActivity extends AppCompatActivity {
+public class SinglePictureActivity extends AppCompatActivity {
 
     private ImageElement theImage;
 

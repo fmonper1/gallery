@@ -9,6 +9,7 @@ package oak.shef.ac.uk.week6;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +39,7 @@ import java.util.List;
 import oak.shef.ac.uk.week6.ImageElement;
 import oak.shef.ac.uk.week6.MyAdapter;
 import oak.shef.ac.uk.week6.R;
+import oak.shef.ac.uk.week6.viewModels.MainActivityViewModel;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private List<ImageElement> myPictureList = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
     private RecyclerView mRecyclerView;
+    private MainActivityViewModel viewModel;
 
     private Activity activity;
 
@@ -57,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         activity= this;
 
@@ -72,11 +75,18 @@ public class MainActivity extends AppCompatActivity {
 
         // required by Android 6.0 +
         checkPermissions(getApplicationContext());
-//        initData();
-        getImages();
 
+        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
-
+        viewModel.getImages().observe(this, (allTheImages) -> {
+            myPictureList = allTheImages;
+            Log.e("images", String.valueOf(allTheImages));
+            // TODO: this isnt done like this... probably...
+            mAdapter= new MyAdapter(myPictureList);
+            mRecyclerView.setAdapter(mAdapter);
+//            mAdapter.notifyDataSetChanged();
+        });
+        //getImages();
         initEasyImage();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
@@ -102,39 +112,6 @@ public class MainActivity extends AppCompatActivity {
                 .setCopyTakenPhotosToPublicGalleryAppFolder(true)
                 .setCopyPickedImagesToPublicGalleryAppFolder(false)
                 .setAllowMultiplePickInGallery(true);
-    }
-
-    public void getImages() {
-        int int_position = 0;
-        Uri uri;
-        Cursor cursor;
-        int column_index_data, column_index_name,column_index_date,column_index_bucket_id;
-
-        String absolutePathOfImage = null;
-        String imageTitle, imageDate, bucket_id;
-        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-        String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.TITLE, MediaStore.MediaColumns.DATE_ADDED,
-                MediaStore.Images.ImageColumns.BUCKET_ID};
-
-        final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
-        cursor = getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
-
-        column_index_data       = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        column_index_name       = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE);
-        column_index_date       = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED);
-        column_index_bucket_id  = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_ID);
-
-        while (cursor.moveToNext()) {
-            absolutePathOfImage = cursor.getString(column_index_data);
-            imageTitle          = cursor.getString(column_index_name);
-            imageDate           = cursor.getString(column_index_date);
-            bucket_id           = cursor.getString(column_index_bucket_id);
-            Log.e("Column", absolutePathOfImage);
-            File imgFile = new File(absolutePathOfImage);
-
-            myPictureList.add(new ImageElement(imgFile, imageTitle, imageDate, bucket_id));
-        }
     }
 
     private void checkPermissions(final Context context) {

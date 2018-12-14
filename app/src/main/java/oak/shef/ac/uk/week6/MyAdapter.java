@@ -57,7 +57,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, ShowImageActivity.class);
+                    Intent intent = new Intent(context, SinglePictureActivity.class);
                     intent.putExtra("position", position);
                     intent.putExtra("bucket_id", items.get(position).bucket_id);
                     context.startActivity(intent);
