@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +53,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
             if (items.get(position).image!=-1) {
                 holder.imageView.setImageResource(items.get(position).image);
             } else if (items.get(position).file!=null){
-                Bitmap myBitmap = BitmapFactory.decodeFile(items.get(position).file.getAbsolutePath());
-                holder.imageView.setImageBitmap(myBitmap);
+                final Bitmap bitmap = getBitmapFromMemCache(String.valueOf(items.get(position)));
+                if (bitmap != null) {
+                    holder.imageView.setImageBitmap(bitmap);
+                }
+                else {
+                    new UploadSingleImageTask().execute(new HolderAndPosition(position, holder));
+
+                }
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,6 +96,84 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
 //            imageTitle = (TextView) itemView.findViewById(R.id.image_title);
         }
     }
+
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(String imagePath,
+                                                         int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(imagePath, options);
+    }
+
+    private class UploadSingleImageTask extends AsyncTask<HolderAndPosition, Void,
+            Bitmap> {
+        HolderAndPosition holdAndPos;
+        @Override
+        protected Bitmap doInBackground(HolderAndPosition... holderAndPosition) {
+            holdAndPos= holderAndPosition[0];
+            Bitmap myBitmap =
+                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).file.getAbsolutePath(), 100, 100);
+            addBitmapToMemoryCache(String.valueOf(items.get(holdAndPos.position)), myBitmap);
+            return myBitmap;
+        }
+        @Override
+        protected void onPostExecute (Bitmap bitmap){
+            holdAndPos.holder.imageView.setImageBitmap(bitmap);
+        }
+    }
+
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            MainActivity.mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    public Bitmap getBitmapFromMemCache(String key) {
+        return MainActivity.mMemoryCache.get(key);
+    }
+    private class HolderAndPosition {
+        int position;
+        View_Holder holder;
+
+        public HolderAndPosition(int position, View_Holder holder) {
+            this.position = position;
+            this.holder = holder;
+        }
+    }
+
+
 
     public static List<ImageElement> getItems() {
         return items;
