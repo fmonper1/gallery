@@ -8,18 +8,14 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import oak.shef.ac.uk.week6.database.PhotoData;
+import oak.shef.ac.uk.week6.repositories.ImageRepository;
 
 public class SinglePictureViewModel extends AndroidViewModel {
 
-    private MyRepository mRepository;
+    private ImageRepository mRepository;
 //     The LiveData for the database details of the
     private MutableLiveData<PhotoData> photoDataLiveData;
     private MutableLiveData<ImageElement> theImage;
@@ -27,7 +23,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
     public SinglePictureViewModel(Application application) {
         super(application);
         // creation and connection to the Repository
-        mRepository = new MyRepository(application);
+        mRepository = new ImageRepository(application);
 //        photoDataLiveData = mRepository.getPhotoData("");
     }
 
@@ -58,6 +54,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
                 } else if (element.file != null) {
                     // Create an ImageElement for data-binding in the view
                     theImage.setValue(new ImageElement(element.file, element.title, element.date, element.bucket_id));
+                    mRepository.getPhotoData(element.file.getAbsolutePath());
                 }
             }
         }

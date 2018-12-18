@@ -12,25 +12,23 @@ import java.util.Date;
 
 @Entity()
 public class PhotoData {
-    public String getBucket_id() {
-        return bucket_id;
+
+
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setBucket_id(String bucket_id) {
-        this.bucket_id = bucket_id;
-    }
-
-    @PrimaryKey
-    @NonNull
-    private String bucket_id; // comes from MediaStore.Images.ImageColumns.BUCKET_ID
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String title;
     private String description;
     private String dateTaken;
     private Float latitude;
     private Float longitude;
+    private String path;
 
-    public PhotoData(String id) {
-        this.bucket_id = id;
+    public PhotoData(String path) {
+        this.path = path;
         this.description = "Please add a description";
     }
 
@@ -58,9 +56,6 @@ public class PhotoData {
         return longitude;
     }
 
-        public void setId(String id) {
-        this.bucket_id = id;
-    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -82,5 +77,18 @@ public class PhotoData {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    @NonNull
+    public int getId() {
+        return id;
     }
 }

@@ -50,7 +50,7 @@ public class SinglePictureActivity extends AppCompatActivity {
             imageView.setImageBitmap(myBitmap);
 
             Log.e("IMAGENAME", theImage.title);
-            Log.e("IMAGENAME", theImage.bucket_id);
+            Log.e("IMAGENAMEPATH", theImage.file.getAbsolutePath());
         });
 
 
