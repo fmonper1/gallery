@@ -13,7 +13,10 @@ import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,11 +33,14 @@ import oak.shef.ac.uk.week6.databinding.ShowPictureAndDataBinding;
 public class SinglePictureActivity extends AppCompatActivity {
 
     private ImageElement theImage;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_picture_and_data);
+
+        setUpToolbar();
 
         // Setup Data Binding in the XML file
         ShowPictureAndDataBinding binding = DataBindingUtil.setContentView(this, R.layout.show_picture_and_data);
@@ -72,7 +78,19 @@ public class SinglePictureActivity extends AppCompatActivity {
                 }
             }
         });
-        // gets and intent from another activity and used the data to find the image
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_single_picture, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void setUpToolbar() {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
 }
