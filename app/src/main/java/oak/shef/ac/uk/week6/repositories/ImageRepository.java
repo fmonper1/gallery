@@ -6,13 +6,9 @@ package oak.shef.ac.uk.week6.repositories;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import java.util.List;
-import java.util.Objects;
 
 import oak.shef.ac.uk.week6.database.MyDAO;
 import oak.shef.ac.uk.week6.database.MyRoomDatabase;
@@ -20,7 +16,7 @@ import oak.shef.ac.uk.week6.database.PhotoData;
 
 public class ImageRepository extends ViewModel {
     private final MyDAO mDBDao;
-    private LiveData<PhotoData> photoDataLiveData;
+    private PhotoData photoDataLiveData;
 
     public ImageRepository(Application application) {
         MyRoomDatabase db = MyRoomDatabase.getDatabase(application);
@@ -29,38 +25,49 @@ public class ImageRepository extends ViewModel {
     }
 
     /**
-     * it gets the data when changed in the db and returns it to the ViewModel
-     * @return
+     * this finds an entry in the DB using the path, if none is find it
+     * creates a new entry in the DB
      */
     public LiveData<PhotoData> getPhotoData(String path) {
-        Log.e("IMAGENAMELOG", "Youre trying to invoke me papi");
-        LiveData<PhotoData> foundItem = mDBDao.retrievePictureData(path);
+        Log.e("ImageRepository", "getPhotoData - Youre trying to invoke me papi");
+        LiveData<PhotoData> foundItem = mDBDao.retrievePictureDataLiveData(path);
 
-        // IF THE ELEMENT RETURNED BY THE DAO IS NULL,
-        // WE CREATE A NEW RECORD USING THE GIVEN PATH
-        if (foundItem.getValue() == null) {
-            Log.e("IMAGENAMELOG", "Youre NULL papito");
-            createNewPhotoData(path);
-        } else {
-            Log.e("IMAGENAMELOG", String.valueOf(foundItem));
-        }
         return foundItem;
     }
 
+    private static class retrievePictureDataAsyncTask extends AsyncTask<String, Void, Void> {
+        private MyDAO mAsyncTaskDao;
+        private PhotoData foundPhotoData;
+
+        retrievePictureDataAsyncTask(MyDAO dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(String... params) {
+            // THIS HAS TO TAKE PASS IN THE BUCKET_ID FOR THE PICTURE
+            foundPhotoData = mAsyncTaskDao.retrievePictureData(params[0]);
+
+            Log.i("ImageRepository", "image found: "+foundPhotoData.getPath()+"");
+            // you may want to uncomment this to check if numbers have been inserted
+            return null;
+        }
+
+    }
+
     public void updatePhotoData() {
-        Log.e("updatePhotoData", "Youre trying to invoke me papi");
+        Log.e("ImageRepository", "Youre trying to invoke me papi");
     }
 
     /**
      * called by the UI to request the generation of a new random number
      */
-    public void createNewPhotoData(String path) {
-        new createAsyncTask(mDBDao).execute(new PhotoData(path));
+    public void createNewPhotoData(String path, String title, String date, String lat, String lon) {
+        new createAsyncTask(mDBDao).execute(new PhotoData(path, title, date, lat, lon));
     }
 
     private static class createAsyncTask extends AsyncTask<PhotoData, Void, Void> {
         private MyDAO mAsyncTaskDao;
-        private LiveData<PhotoData> photoDataLiveData;
+        private PhotoData photoDataLiveData;
 
         createAsyncTask(MyDAO dao) {
             mAsyncTaskDao = dao;

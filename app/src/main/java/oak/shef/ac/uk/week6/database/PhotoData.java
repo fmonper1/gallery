@@ -23,12 +23,16 @@ public class PhotoData {
     private String title;
     private String description;
     private String dateTaken;
-    private Float latitude;
-    private Float longitude;
+    private String latitude;
+    private String longitude;
     private String path;
 
-    public PhotoData(String path) {
+    public PhotoData(String path, String title, String date, String latitude, String longitude) {
         this.path = path;
+        this.title = title;
+        this.dateTaken = date;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = "Please add a description";
     }
 
@@ -48,11 +52,11 @@ public class PhotoData {
         return dateTaken;
     }
 
-    public Float getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public Float getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
@@ -63,11 +67,11 @@ public class PhotoData {
 
 
 
-    public void setLatitude(Float latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(Float longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
