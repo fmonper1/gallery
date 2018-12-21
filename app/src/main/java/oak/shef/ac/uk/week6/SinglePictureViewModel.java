@@ -8,12 +8,27 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.databinding.Observable;
 import android.os.Bundle;
+import android.util.Log;
 
 import oak.shef.ac.uk.week6.database.PhotoData;
 import oak.shef.ac.uk.week6.repositories.ImageRepository;
 
-public class SinglePictureViewModel extends AndroidViewModel {
+public class SinglePictureViewModel extends AndroidViewModel implements Observable {
+    private PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
+
+    @Override
+    protected void addOnPropertyChangedCallback(
+            Observable.OnPropertyChangedCallback callback) {
+        callbacks.add(callback);
+    }
+
+    @Override
+    protected void removeOnPropertyChangedCallback(
+            Observable.OnPropertyChangedCallback callback) {
+        callbacks.remove(callback);
+    }
 
     private ImageRepository mRepository;
 //     The LiveData for the database details of the image
@@ -30,7 +45,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
 
     /**
      * getter for the live data
-     * @return
+     * @return - photoDataLiveData
      */
     public LiveData<PhotoData> getImageDetails() {
         if (photoDataLiveData == null) {
@@ -40,30 +55,15 @@ public class SinglePictureViewModel extends AndroidViewModel {
     }
 
     /**
-     * request by the UI to inspect a single image
+     * getter for the live data
+     * @return - photoDataLiveData
      */
-//    public MutableLiveData<ImageElement> getImageDetails(Bundle b) {
-//        int position = -1;
-//        if (theImage == null) {
-//            theImage = new MutableLiveData<>();
-//        }
-//        if (b != null) {
-//            position = b.getInt("position");
-//            if (position != -1) {
-//                ImageElement element = MyAdapter.getItems().get(position);
-//                if (element.image != -1) {
-//                    // This is for stuff in res/drawables, we dont need it
-//                    // imageView.setImageResource(element.image);
-//                } else if (element.file != null) {
-//                    // Create an ImageElement for data-binding in the view
-//                    theImage.setValue(new ImageElement(element.file, element.title, element.date, element.bucket_id));
-//                    mRepository.getPhotoData(element.file.getAbsolutePath());
-//                    photoDataLiveData = mRepository.getPhotoData(element.file.getAbsolutePath());
-//                }
-//            }
-//        }
-//        return theImage;
-//    }
+    public LiveData<PhotoData> getImageDetails(String path) {
+        Log.d("ImageRe ViewM", "getImageDetails() calling the repo...");
+        photoDataLiveData = mRepository.getPhotoData(path);
+
+        return photoDataLiveData;
+    }
 
     /**
      * request by the UI to inspect a single image
@@ -76,7 +76,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
         if (b != null) {
             position = b.getInt("position");
             if (position != -1) {
-                ImageElement element = MyAdapter.getItems().get(position);
+                ImageElement element = MainActivityGridAdapter.getItems().get(position);
                 if (element.image != -1) {
                     // This is for stuff in res/drawables, we dont need it
                     // imageView.setImageResource(element.image);
@@ -94,7 +94,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
      */
     public void createNewEntry(Bundle b) {
         int position = b.getInt("position");
-        ImageElement element = MyAdapter.getItems().get(position);
+        ImageElement element = MainActivityGridAdapter.getItems().get(position);
 
         mRepository.createNewPhotoData(element.file.getAbsolutePath(), element.title, element.date, element.latitude, element.longitude);
     }

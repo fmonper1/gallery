@@ -15,7 +15,7 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/view_exif_Data"
+        android:id="@+id/view_exif_data"
         android:orderInCategory="100"
         android:title="View EXIF data"
         app:showAsAction="never" />

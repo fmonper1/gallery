@@ -4,27 +4,22 @@
 
 package oak.shef.ac.uk.week6;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import oak.shef.ac.uk.week6.ImageElement;
-import oak.shef.ac.uk.week6.MyAdapter;
-import oak.shef.ac.uk.week6.R;
-import oak.shef.ac.uk.week6.database.PhotoData;
 import oak.shef.ac.uk.week6.databinding.ShowPictureAndDataBinding;
+import oak.shef.ac.uk.week6.ui.EditPictureDetailsActivity;
 
 /*
  * THIS IS A VIEW in MVVM!!
@@ -34,6 +29,9 @@ public class SinglePictureActivity extends AppCompatActivity {
 
     private ImageElement theImage;
     private Toolbar toolbar;
+    private String imagePath;
+    private SinglePictureViewModel model;
+    private Bundle b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,30 +43,27 @@ public class SinglePictureActivity extends AppCompatActivity {
         // Setup Data Binding in the XML file
         ShowPictureAndDataBinding binding = DataBindingUtil.setContentView(this, R.layout.show_picture_and_data);
         // Read extras from Intent from other activity
-        Bundle b = getIntent().getExtras();
+        b = getIntent().getExtras();
 
-        SinglePictureViewModel model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);
+        model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);
 
-//        model.getImageDetails(b).observe(this, theImage -> {
-//            // TODO: Data binding is not working for this, will look into it later...
-//            Bitmap myBitmap = BitmapFactory.decodeFile(theImage.file.getAbsolutePath());
-//            ImageView imageView = (ImageView) findViewById(R.id.image);
-//            imageView.setImageBitmap(myBitmap);
-////            Log.e("IMAGENAME", theImage.title);
-////            Log.e("IMAGENAMEPATH", theImage.file.getAbsolutePath());
-//        });
-
+        //  Observe LiveData for the selected image
         model.getImageDetailsDAO(b).observe(this, foundItem -> {
             // if database is empty
             if (foundItem==null) {
                 Log.e("ImageRepository", "The liveData for the image is Null, attempting to create entry");
                 model.createNewEntry(b);
             } else {
+                // bind the returned object to the variables in the template
                 binding.setPhotoData(foundItem);
                 // decode the bitmap from the path and set it to and element in the view
                 Bitmap myBitmap = BitmapFactory.decodeFile(foundItem.getPath());
                 ImageView imageView = (ImageView) findViewById(R.id.image);
                 imageView.setImageBitmap(myBitmap);
+
+                // Set path to a variable so that it can be passed to another activity in an intent
+
+                // Some logging for stuff :)
                 Log.e("ImageRepository", "Image was found in the database");
                 Log.e("ImageRepository - Path", foundItem.getPath());
                 Log.e("ImageRepository - Desc", foundItem.getDescription());
@@ -90,7 +85,35 @@ public class SinglePictureActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
         toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_details:
+                Log.d("MenuItem", "Go edit details");
+                editImageDetails();
+                break;
+            case R.id.view_exif_data:
+                Log.d("MenuItem", "Go exif details");
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /** Called when the user taps the Send button */
+    public void editImageDetails() {
+        Intent intent = new Intent(this, EditPictureDetailsActivity.class);
+        model.getImageDetails().observe(this, foundItem -> {
+            assert foundItem != null;
+            imagePath = foundItem.getPath();
+            Log.d("ImageRe", imagePath);
+        });
+        intent.putExtra("ImagePath", imagePath);
+        startActivity(intent);
     }
 
 }

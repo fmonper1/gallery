@@ -14,13 +14,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,15 +27,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.View;
-import android.widget.ImageView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import oak.shef.ac.uk.week6.ImageElement;
-import oak.shef.ac.uk.week6.MyAdapter;
-import oak.shef.ac.uk.week6.R;
 import oak.shef.ac.uk.week6.viewModels.MainActivityViewModel;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -70,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
         // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
+        final int cacheSize = maxMemory / 4;
 
 
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
@@ -88,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         // set up the RecyclerView
         int numberOfColumns = 4;
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        mAdapter= new MyAdapter(myPictureList);
+        mAdapter= new MainActivityGridAdapter(myPictureList);
         mRecyclerView.setAdapter(mAdapter);
 
         // required by Android 6.0 +
@@ -100,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             myPictureList = allTheImages;
             Log.e("images", String.valueOf(allTheImages));
             // TODO: this isnt done like this... probably...
-            mAdapter= new MyAdapter(myPictureList);
+            mAdapter= new MainActivityGridAdapter(myPictureList);
             mRecyclerView.setAdapter(mAdapter);
 //            mAdapter.notifyDataSetChanged();
         });

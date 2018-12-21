@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +19,15 @@ import android.widget.TextView;
 import java.util.List;
 
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
+public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGridAdapter.View_Holder> {
     static private Context context;
     private static List<ImageElement> items;
 
-    public MyAdapter(List<ImageElement> items) {
+    public MainActivityGridAdapter(List<ImageElement> items) {
         this.items = items;
     }
 
-    public MyAdapter(Context cont, List<ImageElement> items) {
+    public MainActivityGridAdapter(Context cont, List<ImageElement> items) {
         super();
         this.items = items;
         context = cont;
@@ -173,13 +172,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         }
     }
 
-
-
     public static List<ImageElement> getItems() {
         return items;
     }
 
     public static void setItems(List<ImageElement> items) {
-        MyAdapter.items = items;
+        MainActivityGridAdapter.items = items;
     }
 }
