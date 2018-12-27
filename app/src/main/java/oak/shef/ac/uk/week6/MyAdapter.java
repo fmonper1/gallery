@@ -67,7 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
                 public void onClick(View v) {
                     Intent intent = new Intent(context, SinglePictureActivity.class);
                     intent.putExtra("position", position);
-                    intent.putExtra("bucket_id", items.get(position).bucket_id);
+                    intent.putExtra("path", items.get(position).file.getAbsolutePath());
                     context.startActivity(intent);
                 }
             });

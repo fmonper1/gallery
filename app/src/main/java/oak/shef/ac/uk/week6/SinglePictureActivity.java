@@ -4,12 +4,14 @@
 
 package oak.shef.ac.uk.week6;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import oak.shef.ac.uk.week6.ImageElement;
 import oak.shef.ac.uk.week6.MyAdapter;
 import oak.shef.ac.uk.week6.R;
+import oak.shef.ac.uk.week6.database.PhotoData;
 import oak.shef.ac.uk.week6.databinding.ShowPictureAndDataBinding;
 
 /*
@@ -39,25 +42,37 @@ public class SinglePictureActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
 
         SinglePictureViewModel model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);
-        model.getImageDetails(b).observe(this, theImage -> {
-            // update UI
-            // Bind the ImageElement to the variable in the view
-            binding.setImageElement(theImage);
 
-            // TODO: Data binding is not working for this, will look into it later...
-            Bitmap myBitmap = BitmapFactory.decodeFile(theImage.file.getAbsolutePath());
-            ImageView imageView = (ImageView) findViewById(R.id.image);
-            imageView.setImageBitmap(myBitmap);
+//        model.getImageDetails(b).observe(this, theImage -> {
+//            // TODO: Data binding is not working for this, will look into it later...
+//            Bitmap myBitmap = BitmapFactory.decodeFile(theImage.file.getAbsolutePath());
+//            ImageView imageView = (ImageView) findViewById(R.id.image);
+//            imageView.setImageBitmap(myBitmap);
+////            Log.e("IMAGENAME", theImage.title);
+////            Log.e("IMAGENAMEPATH", theImage.file.getAbsolutePath());
+//        });
 
-            Log.e("IMAGENAME", theImage.title);
-            Log.e("IMAGENAME", theImage.bucket_id);
+        model.getImageDetailsDAO(b).observe(this, foundItem -> {
+            // if database is empty
+            if (foundItem==null) {
+                Log.e("ImageRepository", "The liveData for the image is Null, attempting to create entry");
+                model.createNewEntry(b);
+            } else {
+                binding.setPhotoData(foundItem);
+                // decode the bitmap from the path and set it to and element in the view
+                Bitmap myBitmap = BitmapFactory.decodeFile(foundItem.getPath());
+                ImageView imageView = (ImageView) findViewById(R.id.image);
+                imageView.setImageBitmap(myBitmap);
+                Log.e("ImageRepository", "Image was found in the database");
+                Log.e("ImageRepository - Path", foundItem.getPath());
+                Log.e("ImageRepository - Desc", foundItem.getDescription());
+                if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
+                    Log.e("ImageRepository - Lat", foundItem.getLatitude());
+                    Log.e("ImageRepository - Lon", foundItem.getLongitude());
+                }
+            }
         });
-
-
         // gets and intent from another activity and used the data to find the image
-
-
-
     }
 
 }

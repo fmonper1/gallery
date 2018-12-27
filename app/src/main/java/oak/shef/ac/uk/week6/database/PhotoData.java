@@ -12,25 +12,27 @@ import java.util.Date;
 
 @Entity()
 public class PhotoData {
-    public String getBucket_id() {
-        return bucket_id;
+
+
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setBucket_id(String bucket_id) {
-        this.bucket_id = bucket_id;
-    }
-
-    @PrimaryKey
-    @NonNull
-    private String bucket_id; // comes from MediaStore.Images.ImageColumns.BUCKET_ID
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String title;
     private String description;
     private String dateTaken;
-    private Float latitude;
-    private Float longitude;
+    private String latitude;
+    private String longitude;
+    private String path;
 
-    public PhotoData(String id) {
-        this.bucket_id = id;
+    public PhotoData(String path, String title, String date, String latitude, String longitude) {
+        this.path = path;
+        this.title = title;
+        this.dateTaken = date;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = "Please add a description";
     }
 
@@ -50,17 +52,14 @@ public class PhotoData {
         return dateTaken;
     }
 
-    public Float getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public Float getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-        public void setId(String id) {
-        this.bucket_id = id;
-    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -68,11 +67,11 @@ public class PhotoData {
 
 
 
-    public void setLatitude(Float latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(Float longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
@@ -82,5 +81,18 @@ public class PhotoData {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    @NonNull
+    public int getId() {
+        return id;
     }
 }

@@ -18,7 +18,7 @@ import oak.shef.ac.uk.week6.database.PhotoData;
 
 class MyRepository extends ViewModel {
     private final MyDAO mDBDao;
-    private LiveData<PhotoData> photoDataLiveData;
+    private PhotoData photoDataLiveData;
 
     public MyRepository(Application application) {
         MyRoomDatabase db = MyRoomDatabase.getDatabase(application);
@@ -30,7 +30,7 @@ class MyRepository extends ViewModel {
      * it gets the data when changed in the db and returns it to the ViewModel
      * @return
      */
-    public LiveData<PhotoData> getPhotoData(String bucketID) {
+    public PhotoData getPhotoData(String bucketID) {
         return mDBDao.retrievePictureData(bucketID);
     }
 

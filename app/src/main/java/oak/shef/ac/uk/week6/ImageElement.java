@@ -17,6 +17,8 @@ public class ImageElement {
     String date;
     String bucket_id;
     Bitmap bitmap;
+    String latitude;
+    String longitude;
 
     public ImageElement(int image) {
         this.image = image;
@@ -25,10 +27,12 @@ public class ImageElement {
     public ImageElement(File fileX) {
         file= fileX;
     }
-    public ImageElement(File fileX, String title, String date, String bucket_id) {
+    public ImageElement(File fileX, String title, String date, String bucket_id, String latitude, String longitude) {
         file= fileX;
         this.title = title;
         this.date = date;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.bucket_id = bucket_id;
     }
 
@@ -72,4 +76,19 @@ public class ImageElement {
         this.bucket_id = bucket_id;
     }
 
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 }

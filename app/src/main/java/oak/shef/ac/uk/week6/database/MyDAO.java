@@ -22,8 +22,12 @@ public interface MyDAO {
     void delete(PhotoData photoData);
 
     // it selects a random element
-    @Query("SELECT * FROM photodata WHERE bucket_id = :bucket_id LIMIT 1")
-    LiveData<PhotoData> retrievePictureData(String bucket_id);
+    @Query("SELECT * FROM photodata WHERE path = :path LIMIT 1")
+    LiveData<PhotoData> retrievePictureDataLiveData(String path);
+
+    // it selects a random element
+    @Query("SELECT * FROM photodata WHERE path = :path LIMIT 1")
+    PhotoData retrievePictureData(String path);
 
     @Delete
     void deleteAll(PhotoData... photoData);

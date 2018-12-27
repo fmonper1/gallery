@@ -8,9 +8,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <!--<variable-->
+            <!--name="imageElement"-->
+            <!--type="oak.shef.ac.uk.week6.ImageElement" />-->
         <variable
-            name="imageElement"
-            type="oak.shef.ac.uk.week6.ImageElement" />
+            name="photoData"
+            type="oak.shef.ac.uk.week6.database.PhotoData" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -26,14 +29,14 @@
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
             <TextView
                     android:id="@+id/image_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@{imageElement.title}"
+                    android:text="@{photoData.title}"
                     app:layout_anchor="@+id/image"
                     app:layout_anchorGravity="right|top" />
 
@@ -42,14 +45,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{imageElement.date}" />
+                android:text="@{photoData.dateTaken}" />
 
             <TextView
                 android:id="@+id/image_bucket_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{imageElement.bucket_id}" />
+                android:text="@{photoData.description}" />
 
         </LinearLayout>
 
