@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
         // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
+        final int cacheSize = maxMemory / 2;
 
 
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 //            mAdapter.notifyDataSetChanged();
         });
         //getImages();
-        initEasyImage();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -137,13 +136,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
-        fabGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EasyImage.openGallery(getActivity(), 0);
-            }
-        });
+//        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
+////        fabGallery.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////                EasyImage.openGallery(getActivity(), 0);
+////            }
+////        });
     }
 
     private void invokeCamera() {
@@ -163,7 +162,9 @@ public class MainActivity extends AppCompatActivity {
                     Uri photoURI = FileProvider.getUriForFile(this,
                             "oak.shef.ac.uk.week6.fileprovider",
                             photoFile);
+                    Log.i("Raj",photoURI.getPath());
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.fromFile(photoFile)));
                     startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST);
                 }
             } catch (Exception ex) {
@@ -186,22 +187,17 @@ public class MainActivity extends AppCompatActivity {
 
     private File createImageFile() {
         // the public picture director
-        File picturesDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File picturesDirectory = new File( Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
         // timestamp makes unique name.
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String timestamp = sdf.format(new Date());
         // put together the directory and the timestamp to make a unique image location.
-        File imageFile = new File(picturesDirectory, "picture" + timestamp + ".jpg");
+        File imageFile = new File(picturesDirectory, "IMG_" + timestamp + ".jpg");
         return imageFile;
     }
 
-    private void initEasyImage() {
-        EasyImage.configuration(this)
-                .setImagesFolderName("EasyImage sample")
-                .setCopyTakenPhotosToPublicGalleryAppFolder(true)
-                .setCopyPickedImagesToPublicGalleryAppFolder(false)
-                .setAllowMultiplePickInGallery(true);
-    }
+
 
     private void checkPermissions(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
