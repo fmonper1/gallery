@@ -13,7 +13,7 @@
             <!--type="oak.shef.ac.uk.week6.ImageElement" />-->
         <variable
             name="photoData"
-            type="oak.shef.ac.uk.week6.database.PhotoData" />
+            type="uk.ac.shef.oak.com4510.database.PhotoData" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout

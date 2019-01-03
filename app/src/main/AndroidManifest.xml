@@ -4,7 +4,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="oak.shef.ac.uk.week6">
+    package="uk.ac.shef.oak.com4510">
 
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +24,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="oak.shef.ac.uk.week6.fileprovider"
+            android:authorities="uk.ac.shef.oak.com4510.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -32,7 +33,7 @@
         </provider>
 
         <activity
-            android:name=".MainActivity"
+            android:name="uk.ac.shef.oak.com4510.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -43,7 +44,7 @@
         </activity>
 
         <activity
-            android:name=".SinglePictureActivity"
+            android:name="uk.ac.shef.oak.com4510.SinglePictureActivity"
             />
 
     </application>

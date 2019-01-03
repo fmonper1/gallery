@@ -5,7 +5,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="oak.shef.ac.uk.week6.ui.MainActivity">
+    tools:context="uk.ac.shef.oak.com4510.ui.MainActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

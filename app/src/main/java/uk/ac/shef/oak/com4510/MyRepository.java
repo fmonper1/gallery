@@ -2,19 +2,14 @@
  * Copyright (c) 2018. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package oak.shef.ac.uk.week6;
+package uk.ac.shef.oak.com4510;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
-import android.os.AsyncTask;
-import android.util.Log;
 
-import java.util.Random;
-
-import oak.shef.ac.uk.week6.database.MyDAO;
-import oak.shef.ac.uk.week6.database.MyRoomDatabase;
-import oak.shef.ac.uk.week6.database.PhotoData;
+import uk.ac.shef.oak.com4510.database.MyDAO;
+import uk.ac.shef.oak.com4510.database.MyRoomDatabase;
+import uk.ac.shef.oak.com4510.database.PhotoData;
 
 class MyRepository extends ViewModel {
     private final MyDAO mDBDao;

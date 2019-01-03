@@ -4,20 +4,17 @@
  * some inspiration taken from https://stackoverflow.com/questions/40587168/simple-android-grid-example-using-recyclerview-with-gridlayoutmanager-like-the
  */
 
-package oak.shef.ac.uk.week6;
+package uk.ac.shef.oak.com4510;
 
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,21 +32,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import oak.shef.ac.uk.week6.ImageElement;
-import oak.shef.ac.uk.week6.MyAdapter;
-import oak.shef.ac.uk.week6.R;
-import oak.shef.ac.uk.week6.viewModels.MainActivityViewModel;
+import uk.ac.shef.oak.com4510.viewModels.MainActivityViewModel;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -160,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 // Continue only if the File was successfully created
                 if (photoFile != null) {
                     Uri photoURI = FileProvider.getUriForFile(this,
-                            "oak.shef.ac.uk.week6.fileprovider",
+                            "uk.ac.shef.oak.com4510.fileprovider",
                             photoFile);
                     Log.i("Raj",photoURI.getPath());
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);

@@ -2,7 +2,7 @@
  * Copyright (c) 2018. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package oak.shef.ac.uk.week6;
+package uk.ac.shef.oak.com4510;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -10,8 +10,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.os.Bundle;
 
-import oak.shef.ac.uk.week6.database.PhotoData;
-import oak.shef.ac.uk.week6.repositories.ImageRepository;
+import uk.ac.shef.oak.com4510.database.PhotoData;
+import uk.ac.shef.oak.com4510.repositories.ImageRepository;
 
 public class SinglePictureViewModel extends AndroidViewModel {
 

@@ -2,13 +2,11 @@
  * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package oak.shef.ac.uk.week6;
+package uk.ac.shef.oak.com4510;
 
 import android.graphics.Bitmap;
 
 import java.io.File;
-import java.util.Calendar;
-import java.util.Date;
 
 public class ImageElement {
     int image=-1;

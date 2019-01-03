@@ -2,26 +2,18 @@
  * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package oak.shef.ac.uk.week6;
+package uk.ac.shef.oak.com4510;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import oak.shef.ac.uk.week6.ImageElement;
-import oak.shef.ac.uk.week6.MyAdapter;
-import oak.shef.ac.uk.week6.R;
-import oak.shef.ac.uk.week6.database.PhotoData;
-import oak.shef.ac.uk.week6.databinding.ShowPictureAndDataBinding;
+import uk.ac.shef.oak.com4510.databinding.ShowPictureAndDataBinding;
 
 /*
  * THIS IS A VIEW in MVVM!!
