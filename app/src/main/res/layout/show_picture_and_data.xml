@@ -1,60 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
-  -->
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <!--<variable-->
-            <!--name="imageElement"-->
-            <!--type="oak.shef.ac.uk.week6.ImageElement" />-->
         <variable
             name="photoData"
             type="uk.ac.shef.oak.com4510.database.PhotoData" />
     </data>
-
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:orientation="vertical">
+
+            <!--<include-->
+                <!--layout="@layout/toolbar"-->
+                <!--android:id="@+id/toolbar" />-->
 
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp" />
 
-            <TextView
-                    android:id="@+id/image_title"
+
+                <TextView
+                    android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@{photoData.title}"
-                    app:layout_anchor="@+id/image"
-                    app:layout_anchorGravity="right|top" />
+                    android:text="Title"
+                    android:textStyle="bold" />
 
-            <TextView
+                <TextView
+                android:id="@+id/image_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{photoData.title}"
+                app:layout_anchorGravity="right|top" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date Taken"
+                    android:textStyle="bold" />
+
+                <TextView
                 android:id="@+id/image_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@{photoData.dateTaken}" />
 
-            <TextView
-                android:id="@+id/image_bucket_id"
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textStyle="bold" />
+
+                <TextView
+                android:id="@+id/image_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@{photoData.description}" />
 
         </LinearLayout>
+        </ScrollView>
 
         <!--<android.support.design.widget.AppBarLayout-->
             <!--android:layout_width="match_parent"-->
@@ -70,5 +92,4 @@
 
         <!--</android.support.design.widget.AppBarLayout>-->
 
-    </android.support.design.widget.CoordinatorLayout>
 </layout>

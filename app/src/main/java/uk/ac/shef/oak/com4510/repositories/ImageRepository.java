@@ -54,8 +54,31 @@ public class ImageRepository extends ViewModel {
 
     }
 
-    public void updatePhotoData() {
-        Log.e("ImageRepository", "Youre trying to invoke me papi");
+    public void updatePhotoData(PhotoData photoData) {
+        Log.e("Repo - updatePhotoData", "Youre trying to invoke me papi");
+//        mDBDao.updatePhotoData(photoData);
+        new updatePhotoDataAsyncTask(mDBDao).execute(photoData);
+
+    }
+
+    private static class updatePhotoDataAsyncTask extends AsyncTask<PhotoData, Void, Void> {
+        private MyDAO mAsyncTaskDao;
+        private PhotoData photoDataLiveData;
+
+        updatePhotoDataAsyncTask(MyDAO dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(PhotoData... photoData) {
+            // THIS HAS TO TAKE PASS IN THE BUCKET_ID FOR THE PICTURE
+            mAsyncTaskDao.updatePhotoData(photoData[0]);
+
+            Log.i("ImageRepository", "image updated: "+photoData[0].getPath()+"");
+            // you may want to uncomment this to check if numbers have been inserted
+            int ix=mAsyncTaskDao.howManyElements();
+            Log.i("TAG", ix+"");
+            return null;
+        }
     }
 
     /**

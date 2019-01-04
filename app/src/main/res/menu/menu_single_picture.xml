@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="oak.shef.ac.uk.week6.ui.MainActivity">
+
+    <item
+        android:id="@+id/edit_details"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_edit"
+        android:title="Edit details"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/view_exif_data"
+        android:orderInCategory="100"
+        android:title="View EXIF data"
+        app:showAsAction="never" />
+
+</menu>

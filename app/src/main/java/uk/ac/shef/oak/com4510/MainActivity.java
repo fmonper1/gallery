@@ -21,6 +21,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+
+import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +37,7 @@ import android.util.LruCache;
 import android.view.View;
 import android.widget.Toast;
 
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 import uk.ac.shef.oak.com4510.viewModels.MainActivityViewModel;
+
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         final int cacheSize = maxMemory / 2;
 
 
+
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
@@ -105,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         // set up the RecyclerView
         int numberOfColumns = 4;
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        mAdapter= new MyAdapter(myPictureList);
+        mAdapter= new MainActivityGridAdapter(myPictureList);
         mRecyclerView.setAdapter(mAdapter);
 
         // required by Android 6.0 +
@@ -117,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             myPictureList = allTheImages;
             Log.e("images", String.valueOf(allTheImages));
             // TODO: this isnt done like this... probably...
-            mAdapter= new MyAdapter(myPictureList);
+            mAdapter= new MainActivityGridAdapter(myPictureList);
             mRecyclerView.setAdapter(mAdapter);
 //            mAdapter.notifyDataSetChanged();
         });
