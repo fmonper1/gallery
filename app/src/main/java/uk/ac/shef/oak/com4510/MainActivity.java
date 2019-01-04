@@ -44,6 +44,11 @@ import uk.ac.shef.oak.com4510.viewModels.MainActivityViewModel;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 2987;
@@ -51,11 +56,18 @@ public class MainActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 228;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 4192;
     static final int CAPTURE_IMAGE_REQUEST = 1;
+    private static final int ACCESS_FINE_LOCATION = 123;
     private static final String TAG = "MainActivity";
     private List<ImageElement> myPictureList = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
     private RecyclerView mRecyclerView;
     private MainActivityViewModel viewModel;
+
+    private LocationManager locationManager;
+    private LocationListener listener;
+    Location location;
+    double latitude; // Latitude
+    double longitude;
 
     public static LruCache<String, Bitmap> mMemoryCache;
 
@@ -84,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 return bitmap.getByteCount() / 1024;
             }
         };
+
+
 
         activity= this;
 
@@ -114,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-
                 if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Log.e("cameraaa", "cameraaa");
                     invokeCamera();
@@ -137,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void invokeCamera() {
+//        startLocationUpdates();
         File photoFile = null;
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -187,8 +201,14 @@ public class MainActivity extends AppCompatActivity {
         File imageFile = new File(picturesDirectory, "IMG_" + timestamp + ".jpg");
         return imageFile;
     }
-
-
+    private void locationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        } else {
+            // Write you code here if permission already given.
+        }
+    }
 
     private void checkPermissions(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
