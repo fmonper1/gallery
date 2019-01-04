@@ -11,14 +11,14 @@
     </data>
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 android:orientation="vertical">
 
             <!--<include-->
@@ -29,7 +29,6 @@
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
                 android:paddingBottom="16dp" />
 
 

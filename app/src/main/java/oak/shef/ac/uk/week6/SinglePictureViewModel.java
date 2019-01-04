@@ -8,6 +8,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.databinding.BaseObservable;
 import android.databinding.Observable;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,20 +16,7 @@ import android.util.Log;
 import oak.shef.ac.uk.week6.database.PhotoData;
 import oak.shef.ac.uk.week6.repositories.ImageRepository;
 
-public class SinglePictureViewModel extends AndroidViewModel implements Observable {
-    private PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
-
-    @Override
-    protected void addOnPropertyChangedCallback(
-            Observable.OnPropertyChangedCallback callback) {
-        callbacks.add(callback);
-    }
-
-    @Override
-    protected void removeOnPropertyChangedCallback(
-            Observable.OnPropertyChangedCallback callback) {
-        callbacks.remove(callback);
-    }
+public class SinglePictureViewModel extends AndroidViewModel {
 
     private ImageRepository mRepository;
 //     The LiveData for the database details of the image
@@ -97,5 +85,11 @@ public class SinglePictureViewModel extends AndroidViewModel implements Observab
         ImageElement element = MainActivityGridAdapter.getItems().get(position);
 
         mRepository.createNewPhotoData(element.file.getAbsolutePath(), element.title, element.date, element.latitude, element.longitude);
+    }
+
+    public void submitFormData() {
+        String nTitle, nDescription;
+        Log.d("submitFormData",photoDataLiveData.getValue().getTitle());
+        mRepository.updatePhotoData(photoDataLiveData.getValue());
     }
 }

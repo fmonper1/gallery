@@ -1,10 +1,8 @@
-/*
- * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
- */
-
 package oak.shef.ac.uk.week6;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -32,6 +30,8 @@ public class SinglePictureActivity extends AppCompatActivity {
     private String imagePath;
     private SinglePictureViewModel model;
     private Bundle b;
+    static private Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,7 @@ public class SinglePictureActivity extends AppCompatActivity {
 
         setUpToolbar();
 
+        context = this;
         // Setup Data Binding in the XML file
         ShowPictureAndDataBinding binding = DataBindingUtil.setContentView(this, R.layout.show_picture_and_data);
         // Read extras from Intent from other activity
@@ -88,6 +89,9 @@ public class SinglePictureActivity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
     }
 
+    /*
+     * Switch for options in the menu
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -104,7 +108,9 @@ public class SinglePictureActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Called when the user taps the Send button */
+    /*
+     * Called when the user taps the Send button on the UI
+     */
     public void editImageDetails() {
         Intent intent = new Intent(this, EditPictureDetailsActivity.class);
         model.getImageDetails().observe(this, foundItem -> {
@@ -113,7 +119,7 @@ public class SinglePictureActivity extends AppCompatActivity {
             Log.d("ImageRe", imagePath);
         });
         intent.putExtra("ImagePath", imagePath);
-        startActivity(intent);
+        context.startActivity(intent);
     }
 
 }

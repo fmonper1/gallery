@@ -20,12 +20,12 @@ public class PhotoData {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private String path;
     private String title;
     private String description;
     private String dateTaken;
     private String latitude;
     private String longitude;
-    private String path;
 
     public PhotoData(String path, String title, String date, String latitude, String longitude) {
         this.path = path;
@@ -64,7 +64,6 @@ public class PhotoData {
     public void setTitle(String title) {
         this.title = title;
     }
-
 
 
     public void setLatitude(String latitude) {

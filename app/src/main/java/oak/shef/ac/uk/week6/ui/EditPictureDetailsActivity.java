@@ -8,12 +8,14 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import io.reactivex.Single;
@@ -27,6 +29,8 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
 
     private static String ImagePath;
     private Bundle extras;
+    ActivityEditPictureDetailsBinding binding;
+    SinglePictureViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
         Log.d("ImageRe - Intent", imagePath);
         ActivityEditPictureDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_picture_details);
 
-        SinglePictureViewModel model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);
+        model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);
 
         model.getImageDetails(imagePath).observe(this, foundItem -> {
             binding.setPhotoData(foundItem);
@@ -77,10 +81,12 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
     }
 
     /* Called by the UI when the Submit button is clicked
-     * Gathers the details and sends then to the ViewModel
+     * Call fn in the ViewModel and closes the activity by pressing the back button
      */
     public void submitEditImageForm(View button) {
-
+        Log.d("Activity", "submitEditImageForm was called!");
+        model.submitFormData();
+        super.onBackPressed();
     }
 
 }

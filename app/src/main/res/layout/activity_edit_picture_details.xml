@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
@@ -12,10 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.EditPictureDetailsActivity">
+
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context=".ui.EditPictureDetailsActivity"
             tools:showIn="@layout/activity_edit_picture_details">
@@ -36,29 +44,32 @@
                 android:text="Title" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/field_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:selectAllOnFocus="true"
                 android:inputType="textPersonName"
-                android:text="@{photoData.title}" />
+                android:text="@={photoData.title}" />
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+
                 android:text="Description" />
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/field_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:selectAllOnFocus="true"
                 android:inputType="textPersonName"
-                android:text="@{photoData.description}" />
+                android:text="@={photoData.description}" />
 
             <Button
                 android:id="@+id/button"
