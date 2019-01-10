@@ -34,6 +34,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -44,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import uk.ac.shef.oak.com4510.ui.EditPictureDetailsActivity;
+import uk.ac.shef.oak.com4510.ui.SearchActivity;
 import uk.ac.shef.oak.com4510.viewModels.MainActivityViewModel;
 
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -152,6 +157,41 @@ public class MainActivity extends AppCompatActivity {
 ////                EasyImage.openGallery(getActivity(), 0);
 ////            }
 ////        });
+    }
+
+    /*
+     * Setup the action bar to add a menu
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_camera, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /*
+     * Switch for options in the menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.app_bar_search:
+                Log.d("MenuItem", "Go to search");
+                openSearchActivity();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * Called when the user taps the Search button on action bar
+     */
+    public void openSearchActivity() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        activity.startActivity(intent);
     }
 
     private void startLocationUpdates() {

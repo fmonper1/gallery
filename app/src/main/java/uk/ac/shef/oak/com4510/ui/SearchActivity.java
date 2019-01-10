@@ -1,0 +1,100 @@
+package uk.ac.shef.oak.com4510.ui;
+
+import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+
+import java.util.List;
+
+import uk.ac.shef.oak.com4510.R;
+import uk.ac.shef.oak.com4510.SinglePictureViewModel;
+import uk.ac.shef.oak.com4510.adapters.SearchResultsAdapter;
+import uk.ac.shef.oak.com4510.database.PhotoData;
+import uk.ac.shef.oak.com4510.databinding.ActivitySearchBinding;
+import uk.ac.shef.oak.com4510.pojo.FormData;
+import uk.ac.shef.oak.com4510.viewModels.SearchViewModel;
+
+public class SearchActivity extends AppCompatActivity {
+
+    private SearchViewModel model;
+    private Activity context;
+    private FormData formData;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+//        toolbar.setTitle(R.string.search_activity_title);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle(R.string.search_activity_title);
+//        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+
+        context = this;
+
+        ActivitySearchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
+
+        model = ViewModelProviders.of(this).get(SearchViewModel.class);
+
+        formData = model.getFormData();
+        binding.setFormData(formData);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new SearchResultsAdapter(this);
+//        ((SearchResultsAdapter) mAdapter).setResults(foundItems);
+        mRecyclerView.setAdapter(mAdapter);
+
+    }
+
+    public void submitSearchForm(View view) {
+        Log.d("Activity", "submitSearchForm was called!");
+        if(model.isDataNull()) {
+
+        } else {
+            model.submitFormData();
+            model.getAllImages();
+            model.getAllImages().observe(this, new Observer<List<PhotoData>>() {
+                @Override
+                public void onChanged(@Nullable final List<PhotoData> foundItems) {
+                    // Update the cached copy of the words in the adapter.
+    //                adapter.setWords(words);
+                    Log.e("search results", foundItems.toString());
+//                    mAdapter.setResults(foundItems);
+                    ((SearchResultsAdapter) mAdapter).setResults(foundItems);
+
+                }
+            });
+//            Intent intent = new Intent(this, SearchResultsActivity.class);
+////            intent.putExtra("queryParams", FormData formData);
+//            context.startActivity(intent);
+
+        }
+    }
+
+}

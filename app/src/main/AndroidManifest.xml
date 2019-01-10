@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?><!--   ~ Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author -->
+<?xml version="1.0" encoding="utf-8"?><!-- ~ Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="uk.ac.shef.oak.com4510">
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
-
     <uses-feature android:name="android.hardware.location.gps" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -18,8 +19,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
+        tools:ignore="GoogleAppIndexingWarning">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="uk.ac.shef.oak.com4510.fileprovider"
@@ -27,11 +27,11 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
-            android:name="uk.ac.shef.oak.com4510.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -40,19 +40,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SinglePictureActivity" />
+        <activity android:name=".SinglePictureActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light">
+
+        </activity>
         <activity
             android:name=".ui.EditPictureDetailsActivity"
             android:label="@string/title_activity_edit_picture_details"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".SinglePictureActivity">
-            >
+            android:parentActivityName=".SinglePictureActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light">
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SinglePictureActivity" />
         </activity>
-
+        <activity
+            android:name=".ui.SearchActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light"
+            android:label="@string/search_activity_title">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uk.ac.shef.oak.com4510.MainActivity" />
+        </activity>
+        <activity android:name=".ui.SearchResultsActivity"></activity>
     </application>
 
 </manifest>

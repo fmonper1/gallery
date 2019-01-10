@@ -11,6 +11,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 @Dao
 public interface MyDAO {
     @Insert
@@ -25,6 +27,10 @@ public interface MyDAO {
     // it selects a random element
     @Query("SELECT * FROM photodata WHERE path = :path LIMIT 1")
     LiveData<PhotoData> retrievePictureDataLiveData(String path);
+
+    // it selects a random element
+    @Query("SELECT * FROM photodata WHERE title LIKE :title ")
+    LiveData<List<PhotoData>> findImagesByTitle(String title);
 
     @Update
     void updatePhotoData(PhotoData photoData);

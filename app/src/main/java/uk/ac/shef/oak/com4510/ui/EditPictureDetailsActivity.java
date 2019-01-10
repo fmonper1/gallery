@@ -37,7 +37,7 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_picture_details);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
 
 

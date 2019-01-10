@@ -7,7 +7,9 @@ package uk.ac.shef.oak.com4510;
 import android.graphics.Bitmap;
 
 import java.io.File;
+import android.graphics.Bitmap;
 
+import java.io.File;
 public class ImageElement {
     int image=-1;
     File file=null;

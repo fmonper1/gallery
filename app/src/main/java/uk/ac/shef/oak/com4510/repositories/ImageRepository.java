@@ -10,6 +10,8 @@ import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.List;
+
 import uk.ac.shef.oak.com4510.database.MyDAO;
 import uk.ac.shef.oak.com4510.database.MyRoomDatabase;
 import uk.ac.shef.oak.com4510.database.PhotoData;
@@ -25,7 +27,7 @@ public class ImageRepository extends ViewModel {
     }
 
     /**
-     * this finds an entry in the DB using the path, if none is find it
+     * this finds an entry in the DB using the path, if none is found it
      * creates a new entry in the DB
      */
     public LiveData<PhotoData> getPhotoData(String path) {
@@ -107,4 +109,27 @@ public class ImageRepository extends ViewModel {
             return null;
         }
     }
-}
+
+    public LiveData<List<PhotoData>> findImagesByTitle(String title) {
+        return mDBDao.findImagesByTitle(title);
+    }
+
+//    private static class findByTitleAsync extends AsyncTask<PhotoData, Void, Void> {
+//        private MyDAO mAsyncTaskDao;
+//        private PhotoData photoDataLiveData;
+//
+//        createAsyncTask(MyDAO dao) {
+//            mAsyncTaskDao = dao;
+//        }
+//        @Override
+//        protected Void doInBackground(PhotoData... params) {
+//            // THIS HAS TO TAKE PASS IN THE BUCKET_ID FOR THE PICTURE
+//            mAsyncTaskDao.insert(params[0]);
+//
+//            Log.i("ImageRepository", "image created: "+params[0].getPath()+"");
+//            // you may want to uncomment this to check if numbers have been inserted
+//            int ix=mAsyncTaskDao.howManyElements();
+//            Log.i("TAG", ix+"");
+//            return null;
+//        }
+    }
