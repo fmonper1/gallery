@@ -13,13 +13,16 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 
 import uk.ac.shef.oak.com4510.databinding.ShowPictureAndDataBinding;
@@ -78,6 +81,19 @@ public class SinglePictureActivity extends AppCompatActivity {
                 if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
                     Log.e("ImageRepository - Lat", foundItem.getLatitude());
                     Log.e("ImageRepository - Lon", foundItem.getLongitude());
+                }
+            }
+        });
+
+        LinearLayout details_container = findViewById(R.id.details_container);
+        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_search);
+        fabGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (details_container.getVisibility()==View.VISIBLE ){
+                    details_container.setVisibility(View.INVISIBLE);
+                } else {
+                    details_container.setVisibility(View.VISIBLE);
                 }
             }
         });

@@ -106,13 +106,15 @@ public class SearchActivity extends AppCompatActivity {
                     Log.e("search results", foundItems.toString());
 //                    mAdapter.setResults(foundItems);
                     ((SearchResultsAdapter) mAdapter).setResults(foundItems);
-
+                    if (form_container.getVisibility()==View.VISIBLE && !foundItems.isEmpty()) {
+                        form_container.setVisibility(View.GONE);
+                    }
                 }
             });
 //            Intent intent = new Intent(this, SearchResultsActivity.class);
 ////            intent.putExtra("queryParams", FormData formData);
 //            context.startActivity(intent);ç
-            form_container.setVisibility(View.GONE);
+
 
         }
     }

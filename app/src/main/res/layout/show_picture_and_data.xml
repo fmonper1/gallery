@@ -9,27 +9,30 @@
             name="photoData"
             type="uk.ac.shef.oak.com4510.database.PhotoData" />
     </data>
-        <ScrollView
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:orientation="vertical">
-
-            <!--<include-->
-                <!--layout="@layout/toolbar"-->
-                <!--android:id="@+id/toolbar" />-->
 
             <ImageView
                 android:id="@+id/image"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:paddingBottom="16dp"
+                tools:src="@tools:sample/avatars" />
+
+            <LinearLayout
+                android:id="@+id/details_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp" />
+                android:background="#ffffff"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/image"
+                android:padding="16dp">
+
+                <!--<include-->
+                <!--layout="@layout/toolbar"-->
+                <!--android:id="@+id/toolbar" />-->
 
 
                 <TextView
@@ -37,46 +40,66 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Title"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
-                android:id="@+id/image_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@{photoData.title}"
-                app:layout_anchorGravity="right|top" />
+                    android:id="@+id/image_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{photoData.title}"
+                    android:textSize="@dimen/textSize"
+                    app:layout_anchorGravity="right|top" />
 
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Date Taken"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
-                android:id="@+id/image_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@{photoData.dateTaken}" />
+                    android:id="@+id/image_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{photoData.dateTaken}"
+                    android:textSize="@dimen/textSize" />
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Description"
+                    android:textSize="@dimen/textSize"
                     android:textStyle="bold" />
 
                 <TextView
-                android:id="@+id/image_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@{photoData.description}" />
+                    android:id="@+id/image_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{photoData.description}"
+                    android:textSize="@dimen/textSize" />
 
-        </LinearLayout>
-        </ScrollView>
+            </LinearLayout>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_list_white"
+                app:backgroundTint="@android:color/holo_orange_light"
+                app:fabSize="normal"
+                app:layout_constraintBottom_toBottomOf="@+id/details_container"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </android.support.constraint.ConstraintLayout>
 
         <!--<android.support.design.widget.AppBarLayout-->
             <!--android:layout_width="match_parent"-->

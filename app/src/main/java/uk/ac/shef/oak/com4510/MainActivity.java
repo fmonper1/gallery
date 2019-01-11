@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         // Use 1/8th of the available memory for this memory cache.
         final int cacheSize = maxMemory / 2;
 
-
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {

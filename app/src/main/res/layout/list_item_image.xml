@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -10,7 +8,9 @@
     <ImageView
         android:id="@+id/image_item"
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:padding="10dp" />
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:scaleType="center"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </LinearLayout>

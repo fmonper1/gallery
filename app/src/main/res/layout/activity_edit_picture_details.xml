@@ -9,31 +9,41 @@
             type="uk.ac.shef.oak.com4510.database.PhotoData" />
     </data>
 
-    <ScrollView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.EditPictureDetailsActivity">
 
 
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="16dp"
+            android:paddingTop="16dp"
             android:paddingRight="16dp"
             android:paddingBottom="16dp"
-            android:paddingTop="16dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:context=".ui.EditPictureDetailsActivity"
             tools:showIn="@layout/activity_edit_picture_details">
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:adjustViewBounds="true"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/textView"
@@ -48,8 +58,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:selectAllOnFocus="true"
                 android:inputType="textPersonName"
+                android:selectAllOnFocus="true"
                 android:text="@={photoData.title}" />
 
             <TextView
@@ -66,8 +76,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:selectAllOnFocus="true"
                 android:inputType="textPersonName"
+                android:selectAllOnFocus="true"
                 android:text="@={photoData.description}" />
 
             <Button
@@ -80,5 +90,5 @@
         </LinearLayout>
 
 
-    </ScrollView>
+    </android.support.constraint.ConstraintLayout>
 </layout>

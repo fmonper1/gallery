@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -146,7 +147,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         protected Bitmap doInBackground(HolderAndPosition... holderAndPosition) {
             holdAndPos= holderAndPosition[0];
             Bitmap myBitmap =
-                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).file.getAbsolutePath(), 100, 100);
+                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).file.getAbsolutePath(), 256, 256);
+//            Bitmap myBitmap = ThumbnailUtils.extractThumbnail(
+//                    BitmapFactory.decodeFile(items.get(holdAndPos.position).file.getAbsolutePath()),
+//                    256,
+//                    256);
             addBitmapToMemoryCache(String.valueOf(items.get(holdAndPos.position)), myBitmap);
             return myBitmap;
         }
