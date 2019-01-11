@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.getImages().observe(this, (allTheImages) -> {
             myPictureList = allTheImages;
-            Log.e("images", String.valueOf(allTheImages));
+//            Log.e("images", String.valueOf(allTheImages));
             // TODO: this isnt done like this... probably...
             mAdapter= new MainActivityGridAdapter(myPictureList);
             mRecyclerView.setAdapter(mAdapter);
