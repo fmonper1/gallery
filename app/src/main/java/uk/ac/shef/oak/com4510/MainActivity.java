@@ -89,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        // required by Android 6.0 +
+        checkPermissions(getApplicationContext());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -118,8 +121,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter= new MainActivityGridAdapter(myPictureList);
         mRecyclerView.setAdapter(mAdapter);
 
-        // required by Android 6.0 +
-        checkPermissions(getApplicationContext());
+
 
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 

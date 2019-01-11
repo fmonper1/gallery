@@ -6,13 +6,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -32,6 +36,7 @@ public class SearchActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ConstraintLayout form_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +67,27 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+//        mLayoutManager = new LinearLayoutManager(this);
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
 
         // specify an adapter (see also next example)
         mAdapter = new SearchResultsAdapter(this);
 //        ((SearchResultsAdapter) mAdapter).setResults(foundItems);
         mRecyclerView.setAdapter(mAdapter);
+
+        form_container = findViewById(R.id.form_container);
+        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_search);
+        fabGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (form_container.getVisibility()==View.VISIBLE && mAdapter.getItemCount()>0){
+                    form_container.setVisibility(View.GONE);
+                } else {
+                    form_container.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
     }
 
@@ -92,7 +111,8 @@ public class SearchActivity extends AppCompatActivity {
             });
 //            Intent intent = new Intent(this, SearchResultsActivity.class);
 ////            intent.putExtra("queryParams", FormData formData);
-//            context.startActivity(intent);
+//            context.startActivity(intent);ç
+            form_container.setVisibility(View.GONE);
 
         }
     }

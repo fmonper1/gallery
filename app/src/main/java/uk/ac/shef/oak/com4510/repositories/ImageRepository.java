@@ -114,6 +114,14 @@ public class ImageRepository extends ViewModel {
         return mDBDao.findImagesByTitle(title);
     }
 
+    public LiveData<List<PhotoData>> findImagesByDescription(String description) {
+        return mDBDao.findImagesByDescription(description);
+    }
+
+    public LiveData<List<PhotoData>> findImagesByTitleAndDescription(String title, String description) {
+        return mDBDao.findImagesByTitleAndDescription(title, description);
+    }
+
 //    private static class findByTitleAsync extends AsyncTask<PhotoData, Void, Void> {
 //        private MyDAO mAsyncTaskDao;
 //        private PhotoData photoDataLiveData;

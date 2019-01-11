@@ -56,7 +56,16 @@ public class SearchViewModel extends AndroidViewModel {
         }
         Log.d("formTitle viewmodel", formData.getTitle());
 
-        allImages = mRepository.findImagesByTitle("%"+formData.getTitle()+"%");
+        if (formData.getTitle().equals("")) {
+            // Search by description if title is empty
+            allImages = mRepository.findImagesByDescription("%"+formData.getDescription()+"%");
+        } else if (formData.getDescription().equals("")) {
+            // Search by title if description is empty
+            allImages = mRepository.findImagesByTitle("%"+formData.getTitle()+"%");
+        } else {
+            // Search by title and description
+            allImages = mRepository.findImagesByTitleAndDescription("%"+formData.getTitle()+"%", "%"+formData.getDescription()+"%");
+        }
         return allImages;
     }
 

@@ -109,11 +109,16 @@ public class SinglePictureActivity extends AppCompatActivity {
             case R.id.view_exif_data:
                 Log.d("MenuItem", "Go exif details");
                 break;
+            case android.R.id.home:
+                // Make the up navigation acta like pressing back button
+                this.onBackPressed();
+                return true;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /*
      * Called when the user taps the Send button on the UI

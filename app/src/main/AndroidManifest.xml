@@ -41,7 +41,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".SinglePictureActivity"
-            android:theme="@style/Base.Theme.AppCompat.Light">
+            android:theme="@style/Base.Theme.AppCompat.Light"
+            android:label="@string/single_picture_activity_title"
+            android:parentActivityName=".MainActivity">
 
         </activity>
         <activity
@@ -49,10 +51,6 @@
             android:label="@string/title_activity_edit_picture_details"
             android:parentActivityName=".SinglePictureActivity"
             android:theme="@style/Base.Theme.AppCompat.Light">
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SinglePictureActivity" />
         </activity>
         <activity
             android:name=".ui.SearchActivity"

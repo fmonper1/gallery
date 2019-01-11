@@ -61,8 +61,11 @@ public class SinglePictureViewModel extends AndroidViewModel {
         if (theImage == null) {
             theImage = new MutableLiveData<>();
         }
+        // TODO: this has to find an image using the path and not the position so it can be called from
+        // TODO: the SearchViewModel
         if (b != null) {
             position = b.getInt("position");
+            String path = b.getString("path");
             if (position != -1) {
                 ImageElement element = MainActivityGridAdapter.getItems().get(position);
                 if (element.image != -1) {
@@ -72,6 +75,8 @@ public class SinglePictureViewModel extends AndroidViewModel {
                     // Create an ImageElement for data-binding in the view
                     photoDataLiveData = mRepository.getPhotoData(element.file.getAbsolutePath());
                 }
+            } else {
+                photoDataLiveData = mRepository.getPhotoData(path);
             }
         }
         return photoDataLiveData;

@@ -28,9 +28,14 @@ public interface MyDAO {
     @Query("SELECT * FROM photodata WHERE path = :path LIMIT 1")
     LiveData<PhotoData> retrievePictureDataLiveData(String path);
 
-    // it selects a random element
     @Query("SELECT * FROM photodata WHERE title LIKE :title ")
     LiveData<List<PhotoData>> findImagesByTitle(String title);
+
+    @Query("SELECT * FROM photodata WHERE description LIKE :description ")
+    LiveData<List<PhotoData>> findImagesByDescription(String description);
+
+    @Query("SELECT * FROM photodata WHERE title LIKE :title AND description LIKE :description")
+    LiveData<List<PhotoData>> findImagesByTitleAndDescription(String title, String description);
 
     @Update
     void updatePhotoData(PhotoData photoData);

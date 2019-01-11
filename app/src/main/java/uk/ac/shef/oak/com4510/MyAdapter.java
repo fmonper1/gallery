@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
                     Intent intent = new Intent(context, SinglePictureActivity.class);
                     intent.putExtra("position", position);
                     intent.putExtra("path", items.get(position).file.getAbsolutePath());
+                    Log.e("imagePath myAdapter", items.get(position).file.getAbsolutePath());
+
                     context.startActivity(intent);
                 }
             });
