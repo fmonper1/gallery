@@ -65,7 +65,6 @@ public class MainActivityViewModel extends AndroidViewModel {
             bucket_id           = cursor.getString(column_index_bucket_id);
             latitude            = cursor.getString(column_index_latitude);
             longitude           = cursor.getString(column_index_longitude);
-            Log.e("Column", absolutePathOfImage);
             File imgFile = new File(absolutePathOfImage);
 
             foundImages.add(new ImageElement(imgFile, imageTitle, imageDate, bucket_id, latitude, longitude));

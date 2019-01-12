@@ -45,7 +45,7 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
 //        Intent intent = getIntent();
         extras = getIntent().getExtras();
         String imagePath = extras.getString("ImagePath");
-        Log.d("ImageRe - Intent", imagePath);
+//        Log.d("ImageRe - Intent", imagePath);
         ActivityEditPictureDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_picture_details);
 
         model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);

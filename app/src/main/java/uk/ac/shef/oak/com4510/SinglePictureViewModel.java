@@ -66,7 +66,12 @@ public class SinglePictureViewModel extends AndroidViewModel {
         if (b != null) {
             position = b.getInt("position");
             String path = b.getString("path");
-            if (position != -1) {
+            Log.d("SinglePicViewMod","Path" + path);
+            Log.d("SinglePicViewMod","Position" + position);
+            // Position will be -1 when the activity is launched from the SearchResults
+            if (position == -1) {
+                photoDataLiveData = mRepository.getPhotoData(path);
+            } else {
                 ImageElement element = MainActivityGridAdapter.getItems().get(position);
                 if (element.image != -1) {
                     // This is for stuff in res/drawables, we dont need it
@@ -75,8 +80,6 @@ public class SinglePictureViewModel extends AndroidViewModel {
                     // Create an ImageElement for data-binding in the view
                     photoDataLiveData = mRepository.getPhotoData(element.file.getAbsolutePath());
                 }
-            } else {
-                photoDataLiveData = mRepository.getPhotoData(path);
             }
         }
         return photoDataLiveData;
@@ -90,6 +93,19 @@ public class SinglePictureViewModel extends AndroidViewModel {
         ImageElement element = MainActivityGridAdapter.getItems().get(position);
 
         mRepository.createNewPhotoData(element.file.getAbsolutePath(), element.title, element.date, element.latitude, element.longitude);
+    }
+
+    /**
+     * request by the UI to generate a new entry for an image in the DB
+     */
+    public LiveData<PhotoData> createNewEntryAndReturn(Bundle b) {
+        int position = b.getInt("position");
+        ImageElement element = MainActivityGridAdapter.getItems().get(position);
+
+        mRepository.createNewPhotoData(element.file.getAbsolutePath(), element.title, element.date, element.latitude, element.longitude);
+
+        photoDataLiveData = mRepository.getPhotoData(element.file.getAbsolutePath());
+        return photoDataLiveData;
     }
 
     public void submitFormData() {

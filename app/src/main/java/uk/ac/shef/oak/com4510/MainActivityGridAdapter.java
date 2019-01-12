@@ -144,7 +144,7 @@ public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGr
         protected Bitmap doInBackground(HolderAndPosition... holderAndPosition) {
             holdAndPos= holderAndPosition[0];
             Bitmap myBitmap =
-                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).file.getAbsolutePath(), 128, 128);
+                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).file.getAbsolutePath(), 100, 100);
             addBitmapToMemoryCache(String.valueOf(items.get(holdAndPos.position)), myBitmap);
             return myBitmap;
         }
