@@ -23,7 +23,7 @@ import uk.ac.shef.oak.com4510.R;
 import uk.ac.shef.oak.com4510.SinglePictureActivity;
 import uk.ac.shef.oak.com4510.SinglePictureViewModel;
 import uk.ac.shef.oak.com4510.databinding.ActivityEditPictureDetailsBinding;
-import uk.ac.shef.oak.com4510.databinding.ShowPictureAndDataBinding;
+import uk.ac.shef.oak.com4510.databinding.ActivitySinglePictureBinding;
 
 public class EditPictureDetailsActivity extends AppCompatActivity {
 
@@ -46,7 +46,7 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
         extras = getIntent().getExtras();
         String imagePath = extras.getString("ImagePath");
 //        Log.d("ImageRe - Intent", imagePath);
-        ActivityEditPictureDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_picture_details);
+        ActivitySinglePictureBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_picture_details);
 
         model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);
 

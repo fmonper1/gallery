@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 
-import uk.ac.shef.oak.com4510.databinding.ShowPictureAndDataBinding;
+import uk.ac.shef.oak.com4510.databinding.ActivitySinglePictureBinding;
 import uk.ac.shef.oak.com4510.ui.EditPictureDetailsActivity;
 
 
@@ -50,7 +50,7 @@ public class SinglePictureActivity extends AppCompatActivity {
 
         context = this;
         // Setup Data Binding in the XML file
-        ShowPictureAndDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_single_picture);
+        ActivitySinglePictureBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_single_picture);
         // Read extras from Intent from other activity
         b = getIntent().getExtras();
 
