@@ -19,8 +19,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="uk.ac.shef.oak.com4510.fileprovider"
@@ -30,6 +30,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".MainActivity"
@@ -41,16 +45,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SinglePictureActivity"
+        <activity
+            android:name=".SinglePictureActivity"
             android:label="@string/single_picture_activity_title"
-            android:parentActivityName=".MainActivity">
-
-        </activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ui.EditPictureDetailsActivity"
             android:label="@string/title_activity_edit_picture_details"
-            android:parentActivityName=".SinglePictureActivity">
-        </activity>
+            android:parentActivityName=".SinglePictureActivity" />
         <activity
             android:name=".ui.SearchActivity"
             android:label="@string/search_activity_title">
@@ -58,7 +60,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uk.ac.shef.oak.com4510.MainActivity" />
         </activity>
-        <activity android:name=".ui.SearchResultsActivity"></activity>
+        <activity android:name=".ui.SearchResultsActivity" />
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

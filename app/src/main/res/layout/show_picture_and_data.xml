@@ -84,6 +84,8 @@
                     android:text="@{photoData.description}"
                     android:textSize="@dimen/textSize" />
 
+
+
             </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
