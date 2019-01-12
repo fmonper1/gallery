@@ -23,7 +23,7 @@
 //    @Override
 //    protected void onCreate(@Nullable Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.show_picture_and_data);
+//        setContentView(R.layout.activity_single_picture);
 //
 //        // Get a new or existing ViewModel from the ViewModelProvider.
 //        singlePictureViewModel = ViewModelProviders.of(this).get(SinglePictureViewModel.class);

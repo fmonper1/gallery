@@ -8,17 +8,15 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.databinding.BaseObservable;
-import android.databinding.Observable;
 import android.os.Bundle;
 import android.util.Log;
 
 import uk.ac.shef.oak.com4510.database.PhotoData;
-import uk.ac.shef.oak.com4510.repositories.ImageRepository;
+import uk.ac.shef.oak.com4510.repositories.PhotoRepository;
 
 public class SinglePictureViewModel extends AndroidViewModel {
 
-    private ImageRepository mRepository;
+    private PhotoRepository mRepository;
 //     The LiveData for the database details of the image
     private LiveData<PhotoData> photoDataLiveData;
     private MutableLiveData<ImageElement> theImage;
@@ -26,7 +24,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
     public SinglePictureViewModel(Application application) {
         super(application);
         // creation and connection to the Repository
-        mRepository = new ImageRepository(application);
+        mRepository = new PhotoRepository(application);
 //        photoDataLiveData = mRepository.getPhotoData("");
     }
 
@@ -66,8 +64,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
         if (b != null) {
             position = b.getInt("position");
             String path = b.getString("path");
-            Log.d("SinglePicViewMod","Path" + path);
-            Log.d("SinglePicViewMod","Position" + position);
+
             // Position will be -1 when the activity is launched from the SearchResults
             if (position == -1) {
                 photoDataLiveData = mRepository.getPhotoData(path);

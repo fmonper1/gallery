@@ -57,12 +57,12 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
             imageView.setImageBitmap(myBitmap);
 
             // Some logging for stuff :)
-            Log.e("ImageRepository", "Image was found in the database");
-            Log.e("ImageRepository - Path", foundItem.getPath());
-            Log.e("ImageRepository - Desc", foundItem.getDescription());
+            Log.e("PhotoRepository", "Image was found in the database");
+            Log.e("PhotoRepository - Path", foundItem.getPath());
+            Log.e("PhotoRepository - Desc", foundItem.getDescription());
             if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
-                Log.e("ImageRepository - Lat", foundItem.getLatitude());
-                Log.e("ImageRepository - Lon", foundItem.getLongitude());
+                Log.e("PhotoRepository - Lat", foundItem.getLatitude());
+                Log.e("PhotoRepository - Lon", foundItem.getLongitude());
             }
         });
 

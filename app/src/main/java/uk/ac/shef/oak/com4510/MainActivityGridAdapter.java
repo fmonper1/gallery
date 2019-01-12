@@ -59,7 +59,6 @@ public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGr
                 }
                 else {
                     new UploadSingleImageTask().execute(new HolderAndPosition(position, holder));
-
                 }
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +143,7 @@ public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGr
         protected Bitmap doInBackground(HolderAndPosition... holderAndPosition) {
             holdAndPos= holderAndPosition[0];
             Bitmap myBitmap =
-                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).file.getAbsolutePath(), 100, 100);
+                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).file.getAbsolutePath(), 100 , 100);
             addBitmapToMemoryCache(String.valueOf(items.get(holdAndPos.position)), myBitmap);
             return myBitmap;
         }

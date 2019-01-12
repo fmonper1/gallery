@@ -4,8 +4,6 @@ package uk.ac.shef.oak.com4510;
 
 
 
-import android.app.Activity;
-
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -46,13 +44,13 @@ public class SinglePictureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.show_picture_and_data);
+        setContentView(R.layout.activity_single_picture);
 
         setUpToolbar();
 
         context = this;
         // Setup Data Binding in the XML file
-        ShowPictureAndDataBinding binding = DataBindingUtil.setContentView(this, R.layout.show_picture_and_data);
+        ShowPictureAndDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_single_picture);
         // Read extras from Intent from other activity
         b = getIntent().getExtras();
 
@@ -62,25 +60,25 @@ public class SinglePictureActivity extends AppCompatActivity {
         model.getImageDetailsDAO(b).observe(this, foundItem -> {
             // if database is empty
             if (foundItem==null) {
-                Log.e("ImageRepository", "The liveData for the image is Null, attempting to create entry");
+                Log.e("PhotoRepository", "The liveData for the image is Null, attempting to create entry");
                 model.createNewEntry(b);
             } else {
                 // bind the returned object to the variables in the template
                 binding.setPhotoData(foundItem);
                 // decode the bitmap from the path and set it to and element in the view
+
                 Bitmap myBitmap = BitmapFactory.decodeFile(foundItem.getPath());
                 ImageView imageView = (ImageView) findViewById(R.id.image);
                 imageView.setImageBitmap(myBitmap);
-
                 // Set path to a variable so that it can be passed to another activity in an intent
 
                 // Some logging for stuff :)
-                Log.e("ImageRepository", "Image was found in the database");
-                Log.e("ImageRepository - Path", foundItem.getPath());
-                Log.e("ImageRepository - Desc", foundItem.getDescription());
+                Log.e("PhotoRepository", "Image was found in the database");
+                Log.e("PhotoRepository - Path", foundItem.getPath());
+                Log.e("PhotoRepository - Desc", foundItem.getDescription());
                 if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
-                    Log.e("ImageRepository - Lat", foundItem.getLatitude());
-                    Log.e("ImageRepository - Lon", foundItem.getLongitude());
+                    Log.e("PhotoRepository - Lat", foundItem.getLatitude());
+                    Log.e("PhotoRepository - Lon", foundItem.getLongitude());
                 }
             }
         });

@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 
 @android.arch.persistence.room.Database(entities = {PhotoData.class}, version = 1, exportSchema = false)
 public abstract class MyRoomDatabase extends RoomDatabase {
-    public abstract MyDAO myDao();
+    public abstract PhotoDAO myDao();
 
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile MyRoomDatabase INSTANCE;

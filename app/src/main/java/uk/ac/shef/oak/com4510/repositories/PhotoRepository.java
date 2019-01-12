@@ -12,15 +12,15 @@ import android.util.Log;
 
 import java.util.List;
 
-import uk.ac.shef.oak.com4510.database.MyDAO;
+import uk.ac.shef.oak.com4510.database.PhotoDAO;
 import uk.ac.shef.oak.com4510.database.MyRoomDatabase;
 import uk.ac.shef.oak.com4510.database.PhotoData;
 
-public class ImageRepository extends ViewModel {
-    private final MyDAO mDBDao;
+public class PhotoRepository extends ViewModel {
+    private final PhotoDAO mDBDao;
     private PhotoData photoDataLiveData;
 
-    public ImageRepository(Application application) {
+    public PhotoRepository(Application application) {
         MyRoomDatabase db = MyRoomDatabase.getDatabase(application);
         mDBDao = db.myDao();
 //        photoDataLiveData = mDBDao.retrievePictureData("");
@@ -31,17 +31,17 @@ public class ImageRepository extends ViewModel {
      * creates a new entry in the DB
      */
     public LiveData<PhotoData> getPhotoData(String path) {
-        Log.e("ImageRepository", "getPhotoData - Youre trying to invoke me papi");
+        Log.e("PhotoRepository", "getPhotoData - Youre trying to invoke me papi");
         LiveData<PhotoData> foundItem = mDBDao.retrievePictureDataLiveData(path);
 
         return foundItem;
     }
 
     private static class retrievePictureDataAsyncTask extends AsyncTask<String, Void, Void> {
-        private MyDAO mAsyncTaskDao;
+        private PhotoDAO mAsyncTaskDao;
         private PhotoData foundPhotoData;
 
-        retrievePictureDataAsyncTask(MyDAO dao) {
+        retrievePictureDataAsyncTask(PhotoDAO dao) {
             mAsyncTaskDao = dao;
         }
         @Override
@@ -49,7 +49,7 @@ public class ImageRepository extends ViewModel {
             // THIS HAS TO TAKE PASS IN THE BUCKET_ID FOR THE PICTURE
             foundPhotoData = mAsyncTaskDao.retrievePictureData(params[0]);
 
-            Log.i("ImageRepository", "image found: "+foundPhotoData.getPath()+"");
+            Log.i("PhotoRepository", "image found: "+foundPhotoData.getPath()+"");
             // you may want to uncomment this to check if numbers have been inserted
             return null;
         }
@@ -64,10 +64,10 @@ public class ImageRepository extends ViewModel {
     }
 
     private static class updatePhotoDataAsyncTask extends AsyncTask<PhotoData, Void, Void> {
-        private MyDAO mAsyncTaskDao;
+        private PhotoDAO mAsyncTaskDao;
         private PhotoData photoDataLiveData;
 
-        updatePhotoDataAsyncTask(MyDAO dao) {
+        updatePhotoDataAsyncTask(PhotoDAO dao) {
             mAsyncTaskDao = dao;
         }
         @Override
@@ -75,7 +75,7 @@ public class ImageRepository extends ViewModel {
             // THIS HAS TO TAKE PASS IN THE BUCKET_ID FOR THE PICTURE
             mAsyncTaskDao.updatePhotoData(photoData[0]);
 
-            Log.i("ImageRepository", "image updated: "+photoData[0].getPath()+"");
+            Log.i("PhotoRepository", "image updated: "+photoData[0].getPath()+"");
             // you may want to uncomment this to check if numbers have been inserted
             int ix=mAsyncTaskDao.howManyElements();
             Log.i("TAG", ix+"");
@@ -91,10 +91,10 @@ public class ImageRepository extends ViewModel {
     }
 
     private static class createAsyncTask extends AsyncTask<PhotoData, Void, Void> {
-        private MyDAO mAsyncTaskDao;
+        private PhotoDAO mAsyncTaskDao;
         private PhotoData photoDataLiveData;
 
-        createAsyncTask(MyDAO dao) {
+        createAsyncTask(PhotoDAO dao) {
             mAsyncTaskDao = dao;
         }
         @Override
@@ -102,7 +102,7 @@ public class ImageRepository extends ViewModel {
             // THIS HAS TO TAKE PASS IN THE BUCKET_ID FOR THE PICTURE
             mAsyncTaskDao.insert(params[0]);
 
-            Log.i("ImageRepository", "image created: "+params[0].getPath()+"");
+            Log.i("PhotoRepository", "image created: "+params[0].getPath()+"");
             // you may want to uncomment this to check if numbers have been inserted
                         int ix=mAsyncTaskDao.howManyElements();
                         Log.i("TAG", ix+"");
@@ -123,10 +123,10 @@ public class ImageRepository extends ViewModel {
     }
 
 //    private static class findByTitleAsync extends AsyncTask<PhotoData, Void, Void> {
-//        private MyDAO mAsyncTaskDao;
+//        private PhotoDAO mAsyncTaskDao;
 //        private PhotoData photoDataLiveData;
 //
-//        createAsyncTask(MyDAO dao) {
+//        createAsyncTask(PhotoDAO dao) {
 //            mAsyncTaskDao = dao;
 //        }
 //        @Override
@@ -134,7 +134,7 @@ public class ImageRepository extends ViewModel {
 //            // THIS HAS TO TAKE PASS IN THE BUCKET_ID FOR THE PICTURE
 //            mAsyncTaskDao.insert(params[0]);
 //
-//            Log.i("ImageRepository", "image created: "+params[0].getPath()+"");
+//            Log.i("PhotoRepository", "image created: "+params[0].getPath()+"");
 //            // you may want to uncomment this to check if numbers have been inserted
 //            int ix=mAsyncTaskDao.howManyElements();
 //            Log.i("TAG", ix+"");

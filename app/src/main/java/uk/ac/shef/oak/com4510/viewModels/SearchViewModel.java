@@ -4,29 +4,23 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.shef.oak.com4510.ImageElement;
 import uk.ac.shef.oak.com4510.database.PhotoData;
 import uk.ac.shef.oak.com4510.pojo.FormData;
-import uk.ac.shef.oak.com4510.repositories.ImageRepository;
+import uk.ac.shef.oak.com4510.repositories.PhotoRepository;
 
 public class SearchViewModel extends AndroidViewModel {
     private FormData formData;
-    private ImageRepository mRepository;
+    private PhotoRepository mRepository;
     private LiveData<List<PhotoData>> allImages;
 
 
     public SearchViewModel(Application application) {
         super(application);
-        mRepository = new ImageRepository(application);
+        mRepository = new PhotoRepository(application);
     }
 
     /**
