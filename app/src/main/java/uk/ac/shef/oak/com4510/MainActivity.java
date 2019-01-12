@@ -151,13 +151,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
-////        fabGallery.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////                EasyImage.openGallery(getActivity(), 0);
-////            }
-////        });
+        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
+        fabGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /*
