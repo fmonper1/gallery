@@ -82,6 +82,10 @@ public class SinglePictureViewModel extends AndroidViewModel {
         return photoDataLiveData;
     }
 
+    public LiveData<PhotoData> getLocalPhotoData() {
+        return photoDataLiveData;
+    }
+
     /**
      * request by the UI to generate a new entry for an image in the DB
      */

@@ -8,6 +8,9 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Entity()
 public class PhotoData {
 
@@ -30,7 +33,9 @@ public class PhotoData {
         this.id = path;
         this.path = path;
         this.title = title;
-        this.dateTaken = date;
+        Date fileData = new Date(Long.parseLong(date)*1000);
+        String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(fileData);
+        this.dateTaken = formattedDate;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = "Please add a description";
@@ -94,4 +99,6 @@ public class PhotoData {
     public String getId() {
         return id;
     }
+
+
 }
