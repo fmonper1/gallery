@@ -38,7 +38,8 @@ public interface PhotoDAO {
     @Query("SELECT * FROM photodata WHERE title LIKE :title AND description LIKE :description")
     LiveData<List<PhotoData>> findImagesByTitleAndDescription(String title, String description);
 
-    @Query("SELECT * FROM photodata WHERE latitude")
+    @Query("SELECT * FROM photodata WHERE latitude IS NOT NULL")
+    LiveData<List<PhotoData>> findGeoLocatedImages();
 
     @Update
     void updatePhotoData(PhotoData photoData);

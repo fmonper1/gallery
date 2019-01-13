@@ -122,6 +122,10 @@ public class PhotoRepository extends ViewModel {
         return mDBDao.findImagesByTitleAndDescription(title, description);
     }
 
+    public LiveData<List<PhotoData>> findGeoLocatedImages(){
+        return mDBDao.findGeoLocatedImages();
+    }
+
 //    private static class findByTitleAsync extends AsyncTask<PhotoData, Void, Void> {
 //        private PhotoDAO mAsyncTaskDao;
 //        private PhotoData photoDataLiveData;
