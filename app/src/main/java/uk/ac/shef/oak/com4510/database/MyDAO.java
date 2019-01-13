@@ -37,6 +37,8 @@ public interface MyDAO {
     @Query("SELECT * FROM photodata WHERE title LIKE :title AND description LIKE :description")
     LiveData<List<PhotoData>> findImagesByTitleAndDescription(String title, String description);
 
+    @Query("SELECT * FROM photodata WHERE latitude")
+
     @Update
     void updatePhotoData(PhotoData photoData);
 

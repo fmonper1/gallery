@@ -1,10 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'com4510'
+            keyPassword 'com4510iscool'
+            storeFile file('C:/Users/Rajeev/Downloads/keyStore.jks')
+            storePassword 'com4510iscool'
+        }
+    }
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
-        applicationId "oak.shef.ac.uk.week6"
+        applicationId "uk.ac.shef.oak.com4510"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
@@ -15,6 +23,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
     dataBinding {
@@ -27,7 +38,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -35,15 +46,13 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:design:28.+'
     implementation 'com.github.jkwiecien:EasyImage:2.0.3'
-
-    implementation "android.arch.persistence.room:runtime:1.1.1"
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
-    testImplementation "android.arch.persistence.room:testing:1.1.1"
-    implementation "android.arch.persistence.room:rxjava2:1.1.1"
-
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    testImplementation 'android.arch.persistence.room:testing:1.1.1'
+    implementation 'android.arch.persistence.room:rxjava2:1.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
-
     testImplementation 'junit:junit:4.12'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-location:16.+'
 }
