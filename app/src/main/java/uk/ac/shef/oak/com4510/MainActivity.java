@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
         // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 2;
+        final int cacheSize = 4 * maxMemory / 10;
 
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override

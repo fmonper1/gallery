@@ -23,7 +23,7 @@ import uk.ac.shef.oak.com4510.R;
 import uk.ac.shef.oak.com4510.SinglePictureActivity;
 import uk.ac.shef.oak.com4510.SinglePictureViewModel;
 import uk.ac.shef.oak.com4510.databinding.ActivityEditPictureDetailsBinding;
-import uk.ac.shef.oak.com4510.databinding.ShowPictureAndDataBinding;
+import uk.ac.shef.oak.com4510.databinding.ActivitySinglePictureBinding;
 
 public class EditPictureDetailsActivity extends AppCompatActivity {
 
@@ -46,7 +46,7 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
         extras = getIntent().getExtras();
         String imagePath = extras.getString("ImagePath");
 //        Log.d("ImageRe - Intent", imagePath);
-        ActivityEditPictureDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_picture_details);
+        ActivitySinglePictureBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_picture_details);
 
         model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);
 
@@ -57,12 +57,12 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
             imageView.setImageBitmap(myBitmap);
 
             // Some logging for stuff :)
-            Log.e("ImageRepository", "Image was found in the database");
-            Log.e("ImageRepository - Path", foundItem.getPath());
-            Log.e("ImageRepository - Desc", foundItem.getDescription());
+            Log.e("PhotoRepository", "Image was found in the database");
+            Log.e("PhotoRepository - Path", foundItem.getPath());
+            Log.e("PhotoRepository - Desc", foundItem.getDescription());
             if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
-                Log.e("ImageRepository - Lat", foundItem.getLatitude());
-                Log.e("ImageRepository - Lon", foundItem.getLongitude());
+                Log.e("PhotoRepository - Lat", foundItem.getLatitude());
+                Log.e("PhotoRepository - Lon", foundItem.getLongitude());
             }
         });
 

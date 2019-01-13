@@ -12,12 +12,13 @@ import android.support.annotation.NonNull;
 public class PhotoData {
 
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    @NonNull
+    private String id;
     private String path;
     private String title;
     private String description;
@@ -26,6 +27,7 @@ public class PhotoData {
     private String longitude;
 
     public PhotoData(String path, String title, String date, String latitude, String longitude) {
+        this.id = path;
         this.path = path;
         this.title = title;
         this.dateTaken = date;
@@ -89,7 +91,7 @@ public class PhotoData {
     }
 
     @NonNull
-    public int getId() {
+    public String getId() {
         return id;
     }
 }

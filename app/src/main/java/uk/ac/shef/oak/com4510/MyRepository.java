@@ -7,12 +7,12 @@ package uk.ac.shef.oak.com4510;
 import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 
-import uk.ac.shef.oak.com4510.database.MyDAO;
+import uk.ac.shef.oak.com4510.database.PhotoDAO;
 import uk.ac.shef.oak.com4510.database.MyRoomDatabase;
 import uk.ac.shef.oak.com4510.database.PhotoData;
 
 class MyRepository extends ViewModel {
-    private final MyDAO mDBDao;
+    private final PhotoDAO mDBDao;
     private PhotoData photoDataLiveData;
 
     public MyRepository(Application application) {
@@ -39,10 +39,10 @@ class MyRepository extends ViewModel {
 //    }
 
 //    private static class getPhotoDataAsyncTask extends AsyncTask<PhotoData, Void, Void> {
-//        private MyDAO mAsyncTaskDao;
+//        private PhotoDAO mAsyncTaskDao;
 //        private LiveData<PhotoData> photoDataLiveData;
 //
-////        getPhotoDataAsyncTask(MyDAO dao) {
+////        getPhotoDataAsyncTask(PhotoDAO dao) {
 ////            mAsyncTaskDao = dao;
 ////        }
 //        @Override
