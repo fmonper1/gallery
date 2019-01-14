@@ -4,6 +4,7 @@ package uk.ac.shef.oak.com4510;
 
 
 
+import android.app.FragmentTransaction;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,9 +21,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import uk.ac.shef.oak.com4510.databinding.ActivitySinglePictureBinding;
 import uk.ac.shef.oak.com4510.ui.EditPictureDetailsActivity;
@@ -31,7 +42,7 @@ import uk.ac.shef.oak.com4510.ui.EditPictureDetailsActivity;
  * THIS IS A VIEW in MVVM!!
  */
 
-public class SinglePictureActivity extends AppCompatActivity {
+public class SinglePictureActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private ImageElement theImage;
     private Toolbar toolbar;
@@ -39,12 +50,19 @@ public class SinglePictureActivity extends AppCompatActivity {
     private SinglePictureViewModel model;
     private Bundle b;
     static private Context context;
-
+    private Double lat;
+    private Double lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_picture);
+
+        MapFragment mMapFragment = MapFragment.newInstance();
+        FragmentTransaction fragmentTransaction =
+                getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.map_goes_here, mMapFragment);
+        fragmentTransaction.commit();
 
         setUpToolbar();
 
@@ -79,7 +97,11 @@ public class SinglePictureActivity extends AppCompatActivity {
                 if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
                     Log.e("PhotoRepository - Lat", foundItem.getLatitude());
                     Log.e("PhotoRepository - Lon", foundItem.getLongitude());
+                    mMapFragment.getMapAsync(this);
+                    // Theres coordinates so we can show the map on the UI
+                    findViewById(R.id.map_goes_here).setVisibility(View.VISIBLE);
                 }
+
             }
         });
 
@@ -93,6 +115,27 @@ public class SinglePictureActivity extends AppCompatActivity {
                 } else {
                     details_container.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        model.getLocalPhotoData().observe(this, foundItem -> {
+            if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
+                Log.e("mapready - Lat", foundItem.getLatitude());
+                Log.e("mapready - Lon", foundItem.getLongitude());
+
+                lat = Double.parseDouble(foundItem.getLatitude());
+                lon = Double.parseDouble(foundItem.getLongitude());
+                LatLng picLocation = new LatLng(lat,lon);
+
+                map.addMarker(new MarkerOptions()
+                        .position(picLocation)
+                        .title("Photo was taken here"));
+
+                map.moveCamera(CameraUpdateFactory.newLatLng(picLocation));
             }
         });
     }

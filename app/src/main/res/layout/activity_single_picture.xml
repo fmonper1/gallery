@@ -28,7 +28,8 @@
                 android:orientation="vertical"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/image"
-                android:padding="16dp">
+                android:padding="16dp"
+                >
 
                 <!--<include-->
                 <!--layout="@layout/toolbar"-->
@@ -83,6 +84,14 @@
                     android:layout_weight="1"
                     android:text="@{photoData.description}"
                     android:textSize="@dimen/textSize" />
+
+                <FrameLayout
+                    android:id="@+id/map_goes_here"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
+
+                </FrameLayout>
 
 
             </LinearLayout>
