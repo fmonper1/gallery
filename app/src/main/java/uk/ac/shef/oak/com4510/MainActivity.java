@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +61,15 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 2987;
@@ -68,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 4192;
     static final int CAPTURE_IMAGE_REQUEST = 1;
     private static final int ACCESS_FINE_LOCATION = 123;
+    private static final int ACCESS_COARSE_LOCATION = 456;
     private static final String TAG = "MainActivity";
     private List<ImageElement> myPictureList = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
@@ -76,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private LocationListener listener;
+    private LocationRequest mLocationRequest;
+    private FusedLocationProviderClient mFusedLocationClient;
     Location location;
     double latitude; // Latitude
     double longitude;
@@ -93,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
@@ -138,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(permissionRequest, REQUEST_READ_EXTERNAL_STORAGE);
         }
 
-        startLocationUpdates();
+//        startLocationUpdates();
         //getImages();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
@@ -196,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-     * Called when the user taps the Search button on action bar
+     * Called from the UI when the user taps the Search button on action bar
      */
     public void openSearchActivity() {
         Intent intent = new Intent(this, SearchActivity.class);
@@ -204,7 +215,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -221,6 +233,9 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         ACCESS_FINE_LOCATION);
 
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        ACCESS_COARSE_LOCATION);
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
@@ -228,17 +243,43 @@ public class MainActivity extends AppCompatActivity {
 
             return;
         }
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null /* Looper */);
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        startLocationUpdates();
+    }
+
+
+    private Location mCurrentLocation;
+    private String mLastUpdateTime;
+    LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            mCurrentLocation = locationResult.getLastLocation();
+            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            Log.e("Location", mCurrentLocation.toString());
+        }
+    };
 
 
     File photoFile = null;
     private void invokeCamera() {
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             try {
-
+                startLocationUpdates();
                 photoFile = createImageFile();
                 displayMessage(getBaseContext(),photoFile.getAbsolutePath());
 
@@ -255,10 +296,7 @@ public class MainActivity extends AppCompatActivity {
                 // Error occurred while creating the File
                 displayMessage(getBaseContext(),ex.getMessage().toString());
             }
-
-
-        }else
-        {
+        } else {
             displayMessage(getBaseContext(),"Nullll");
         }
 
@@ -327,6 +365,7 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     invokeCamera();
                 }
+                return;
             }
 
             // other 'case' lines to check for other
@@ -342,7 +381,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Log.d(TAG, "onActivityResult: displaying");
-            ImageElement newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(new Date()), photoFile.getAbsolutePath(), "", "" );
+            long time = System.currentTimeMillis();
+            Log.d("currentTimeMs", String.valueOf(time));
+            ImageElement newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(time), photoFile.getAbsolutePath(), null, null );
+            Intent intent = new Intent(activity, SinglePictureActivity.class);
+            intent.putExtra("position", 0);
+            activity.startActivity(intent);
             myPictureList.add(0,newImg);
             mAdapter.notifyDataSetChanged();
 //            mRecyclerView.scrollToPosition(0);
