@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        startLocationUpdates();
+
 
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(permissionRequest, REQUEST_READ_EXTERNAL_STORAGE);
         }
 
-
+        startLocationUpdates();
         //getImages();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
@@ -343,9 +343,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Log.d(TAG, "onActivityResult: displaying");
             ImageElement newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(new Date()), photoFile.getAbsolutePath(), "", "" );
-            myPictureList.add(newImg);
+            myPictureList.add(0,newImg);
             mAdapter.notifyDataSetChanged();
-            mRecyclerView.scrollToPosition(0);
+//            mRecyclerView.scrollToPosition(0);
             Log.d(TAG, "onActivityResult: done");
         }
     }
