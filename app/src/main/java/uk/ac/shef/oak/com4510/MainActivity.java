@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -84,13 +85,11 @@ public class MainActivity extends AppCompatActivity {
     private Activity activity;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-
-        // required by Android 6.0 +
-        checkPermissions(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -119,19 +118,27 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         mAdapter= new MainActivityGridAdapter(myPictureList);
         mRecyclerView.setAdapter(mAdapter);
-
-
-
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
-        viewModel.getImages().observe(this, (allTheImages) -> {
-            myPictureList = allTheImages;
+
+        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            viewModel.getImages().observe(this, (allTheImages) -> {
+                myPictureList = allTheImages;
 //            Log.e("images", String.valueOf(allTheImages));
-            // TODO: this isnt done like this... probably...
-            mAdapter= new MainActivityGridAdapter(myPictureList);
-            mRecyclerView.setAdapter(mAdapter);
+                // TODO: this isnt done like this... probably...
+                mAdapter= new MainActivityGridAdapter(myPictureList);
+                mRecyclerView.setAdapter(mAdapter);
 //            mAdapter.notifyDataSetChanged();
-        });
+            });
+        }
+
+        else {
+            // let's request permission.
+            String[] permissionRequest = {Manifest.permission.READ_EXTERNAL_STORAGE};
+            requestPermissions(permissionRequest, REQUEST_READ_EXTERNAL_STORAGE);
+        }
+
+
         //getImages();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
@@ -223,9 +230,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    File photoFile = null;
     private void invokeCamera() {
-//        startLocationUpdates();
-        File photoFile = null;
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -234,14 +241,12 @@ public class MainActivity extends AppCompatActivity {
 
                 photoFile = createImageFile();
                 displayMessage(getBaseContext(),photoFile.getAbsolutePath());
-                Log.i("Mayank",photoFile.getAbsolutePath());
 
                 // Continue only if the File was successfully created
                 if (photoFile != null) {
                     Uri photoURI = FileProvider.getUriForFile(this,
                             "uk.ac.shef.oak.com4510.fileprovider",
                             photoFile);
-                    Log.i("Raj",photoURI.getPath());
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 //                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.fromFile(photoFile)));
                     startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST);
@@ -275,62 +280,7 @@ public class MainActivity extends AppCompatActivity {
         File imageFile = new File(picturesDirectory, "IMG_" + timestamp + ".jpg");
         return imageFile;
     }
-    private void locationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
-        } else {
-            // Write you code here if permission already given.
-        }
-    }
 
-    private void checkPermissions(final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    android.support.v7.app.AlertDialog.Builder alertBuilder = new android.support.v7.app.AlertDialog.Builder(context);
-                    alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("External storage permission is necessary");
-                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
-                        }
-                    });
-                    android.support.v7.app.AlertDialog alert = alertBuilder.create();
-                    alert.show();
-
-                } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_EXTERNAL_STORAGE);
-                }
-
-            }
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    android.support.v7.app.AlertDialog.Builder alertBuilder = new android.support.v7.app.AlertDialog.Builder(context);
-                    alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Writing external storage permission is necessary");
-                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_EXTERNAL_STORAGE);
-                        }
-                    });
-                    android.support.v7.app.AlertDialog alert = alertBuilder.create();
-                    alert.show();
-
-                } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_WRITE_EXTERNAL_STORAGE);
-                }
-
-            }
-
-
-        }
-    }
 
 
     @Override
@@ -354,6 +304,31 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            case REQUEST_READ_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    viewModel.getImages().observe(this, (allTheImages) -> {
+                        myPictureList = allTheImages;
+//            Log.e("images", String.valueOf(allTheImages));
+                        // TODO: this isnt done like this... probably...
+                        mAdapter= new MainActivityGridAdapter(myPictureList);
+                        mRecyclerView.setAdapter(mAdapter);
+//            mAdapter.notifyDataSetChanged();
+                    });
+
+                }
+
+                return;
+
+            }
+
+            case CAMERA_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    invokeCamera();
+                }
+            }
+
             // other 'case' lines to check for other
             // permissions this app might request
         }
@@ -365,27 +340,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
-            @Override
-            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
-                //Some error handling
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onImagesPicked(List<File> imageFiles, EasyImage.ImageSource source, int type) {
-                onPhotosReturned(imageFiles);
-            }
-
-            @Override
-            public void onCanceled(EasyImage.ImageSource source, int type) {
-                //Cancel handling, you might wanna remove taken photo if it was canceled
-                if (source == EasyImage.ImageSource.CAMERA) {
-                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(getActivity());
-                    if (photoFile != null) photoFile.delete();
-                }
-            }
-        });
+        if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            Log.d(TAG, "onActivityResult: displaying");
+            ImageElement newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(new Date()), photoFile.getAbsolutePath(), "", "" );
+            myPictureList.add(newImg);
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.scrollToPosition(0);
+            Log.d(TAG, "onActivityResult: done");
+        }
     }
 
 
