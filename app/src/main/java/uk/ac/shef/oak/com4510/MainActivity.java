@@ -372,7 +372,13 @@ public class MainActivity extends AppCompatActivity {
             // Divide here by 1000 cos were multiplying by that in the PhotoData to convert the epoch date
             long time = System.currentTimeMillis()/1000;
             Log.d("currentTimeMs", String.valueOf(time));
-            ImageElement newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(time), photoFile.getAbsolutePath(), String.valueOf(bestLocation.getLatitude()), String.valueOf(bestLocation.getLongitude()));
+            ImageElement newImg;
+            if (bestLocation != null) {
+                 newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(time), photoFile.getAbsolutePath(), String.valueOf(bestLocation.getLatitude()), String.valueOf(bestLocation.getLongitude()));
+            }
+            else {
+                 newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(time), photoFile.getAbsolutePath(), null, null);
+            }
             Intent intent = new Intent(activity, SinglePictureActivity.class);
             intent.putExtra("position", 0);
             activity.startActivity(intent);
