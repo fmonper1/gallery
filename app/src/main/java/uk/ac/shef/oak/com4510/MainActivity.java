@@ -7,6 +7,7 @@
 package uk.ac.shef.oak.com4510;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
@@ -69,6 +70,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 228;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 4192;
     static final int CAPTURE_IMAGE_REQUEST = 1;
-    private static final int ACCESS_FINE_LOCATION = 123;
-    private static final int ACCESS_COARSE_LOCATION = 456;
+    private static final int TAG_ACCESS_FINE_LOCATION = 123;
+    private static final int TAG_ACCESS_COARSE_LOCATION = 124;
     private static final String TAG = "MainActivity";
     private List<ImageElement> myPictureList = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
@@ -94,9 +96,7 @@ public class MainActivity extends AppCompatActivity {
     double longitude;
 
     public static LruCache<String, Bitmap> mMemoryCache;
-
     private Activity activity;
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
 
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
         activity= this;
 
         mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
@@ -133,17 +137,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            viewModel.getImages().observe(this, (allTheImages) -> {
-                myPictureList = allTheImages;
-//            Log.e("images", String.valueOf(allTheImages));
-                // TODO: this isnt done like this... probably...
-                mAdapter= new MainActivityGridAdapter(myPictureList);
-                mRecyclerView.setAdapter(mAdapter);
-//            mAdapter.notifyDataSetChanged();
-            });
-        }
-
-        else {
+            loadAndDisplayImages();
+        } else {
             // let's request permission.
             String[] permissionRequest = {Manifest.permission.READ_EXTERNAL_STORAGE};
             requestPermissions(permissionRequest, REQUEST_READ_EXTERNAL_STORAGE);
@@ -153,29 +148,22 @@ public class MainActivity extends AppCompatActivity {
         //getImages();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View view) {
-                if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Log.e("cameraaa", "cameraaa");
-                    invokeCamera();
-
-                } else {
-                    // let's request permission.
-                    String[] permissionRequest = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                    requestPermissions(permissionRequest, CAMERA_PERMISSION_REQUEST_CODE);
-                }
+        fab.setOnClickListener(view -> {
+            startLocationUpdates();
+            if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.e("cameraaa", "cameraaa");
+                invokeCamera();
+            } else {
+                // let's request permission.
+                String[] permissionRequest = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                requestPermissions(permissionRequest, CAMERA_PERMISSION_REQUEST_CODE);
             }
         });
 
         FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
-        fabGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(intent);
-            }
+        fabGallery.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -231,11 +219,11 @@ public class MainActivity extends AppCompatActivity {
 
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        ACCESS_FINE_LOCATION);
+                        TAG_ACCESS_FINE_LOCATION);
 
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        ACCESS_COARSE_LOCATION);
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+//                        TAG_ACCESS_COARSE_LOCATION);
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
@@ -243,34 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
             return;
         }
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null /* Looper */);
-
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        startLocationUpdates();
-    }
-
-
-    private Location mCurrentLocation;
-    private String mLastUpdateTime;
-    LocationCallback mLocationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-            mCurrentLocation = locationResult.getLastLocation();
-            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            Log.e("Location", mCurrentLocation.toString());
-        }
-    };
 
 
     File photoFile = null;
@@ -321,23 +282,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case ACCESS_FINE_LOCATION: {
+            case TAG_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
 //                    // permission was granted, yay! Do the
 //                    // contacts-related task you need to do.
-//                    mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-//                            mLocationCallback, null /* Looper */);
+                    startLocationUpdates();
                 } else {
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+                    Toast.makeText(getApplicationContext(),
+                            "Application will not add location to the pictures without location services!", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
@@ -345,14 +308,7 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_READ_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    viewModel.getImages().observe(this, (allTheImages) -> {
-                        myPictureList = allTheImages;
-//            Log.e("images", String.valueOf(allTheImages));
-                        // TODO: this isnt done like this... probably...
-                        mAdapter= new MainActivityGridAdapter(myPictureList);
-                        mRecyclerView.setAdapter(mAdapter);
-//            mAdapter.notifyDataSetChanged();
-                    });
+                    loadAndDisplayImages();
 
                 }
 
@@ -373,6 +329,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void loadAndDisplayImages() {
+        viewModel.getImages().observe(this, (allTheImages) -> {
+            myPictureList = allTheImages;
+//            Log.e("images", String.valueOf(allTheImages));
+            // TODO: this isnt done like this... probably...
+            mAdapter= new MainActivityGridAdapter(myPictureList);
+            mRecyclerView.setAdapter(mAdapter);
+//            mAdapter.notifyDataSetChanged();
+        });
+    }
 
 
     @Override
@@ -381,7 +347,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             Log.d(TAG, "onActivityResult: displaying");
-            long time = System.currentTimeMillis();
+            // Divide here by 1000 cos were multiplying by that in the PhotoData to convert the epoch date
+            long time = System.currentTimeMillis()/1000;
             Log.d("currentTimeMs", String.valueOf(time));
             ImageElement newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(time), photoFile.getAbsolutePath(), null, null );
             Intent intent = new Intent(activity, SinglePictureActivity.class);
