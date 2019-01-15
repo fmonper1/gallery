@@ -205,25 +205,48 @@ public class MainActivity extends AppCompatActivity {
         activity.startActivity(intent);
     }
 
-
+    Location bestLocation = null;
     @SuppressLint("NewApi")
     private void startLocationUpdates() {
         if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
 
-            mFusedLocationClient.getLastLocation()
-                    .addOnCompleteListener(activity, new OnCompleteListener<Location>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Location> task) {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                mLastLocation = task.getResult();
-                                Log.i("locationnn",String.valueOf(mLastLocation.getLatitude()));
-                            } else {
-                                Log.i(TAG, "Inside getLocation function. Error while getting location");
-                                System.out.println("Returning null location "+task.getException());
-                            }
-                        }
-                    });
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            List<String> providers = locationManager.getProviders(true);
+
+            for (String provider : providers) {
+                Location l = locationManager.getLastKnownLocation(provider);
+                Log.d(TAG,"last known location, provider:" + provider + "location: "+ l);
+
+                if (l == null) {
+                    continue;
+                }
+                if (bestLocation == null
+                        || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    Log.d(TAG,"found best last known location:" +  l);
+                    bestLocation = l;
+
+                }
+            }
+            if (bestLocation == null) {
+                Log.d(TAG, "startLocationUpdates: nullll");
+            }
+            
+        
+//            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+//
+//            mFusedLocationClient.getLastLocation()
+//                    .addOnCompleteListener(activity, new OnCompleteListener<Location>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Location> task) {
+//                            if (task.isSuccessful() && task.getResult() != null) {
+//                                mLastLocation = task.getResult();
+//                                Log.i("locationnn",String.valueOf(mLastLocation.getLatitude()));
+//                            } else {
+//                                Log.i(TAG, "Inside getLocation function. Error while getting location");
+//                                System.out.println("Returning null location "+task.getException());
+//                            }
+//                        }
+//                    });
         }
         else {
             String[] permissionRequest = {Manifest.permission.ACCESS_FINE_LOCATION};
@@ -349,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
             // Divide here by 1000 cos were multiplying by that in the PhotoData to convert the epoch date
             long time = System.currentTimeMillis()/1000;
             Log.d("currentTimeMs", String.valueOf(time));
-            ImageElement newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(time), photoFile.getAbsolutePath(), null, null );
+            ImageElement newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(time), photoFile.getAbsolutePath(), String.valueOf(bestLocation.getLatitude()), String.valueOf(bestLocation.getLongitude()));
             Intent intent = new Intent(activity, SinglePictureActivity.class);
             intent.putExtra("position", 0);
             activity.startActivity(intent);
