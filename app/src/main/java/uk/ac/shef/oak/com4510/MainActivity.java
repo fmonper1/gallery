@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import android.os.Build;
@@ -70,7 +71,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
     Location location;
     double latitude; // Latitude
     double longitude;
+    private Location mLastLocation;
 
     public static LruCache<String, Bitmap> mMemoryCache;
     private Activity activity;
@@ -144,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(permissionRequest, REQUEST_READ_EXTERNAL_STORAGE);
         }
 
-//        startLocationUpdates();
         //getImages();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
@@ -202,34 +205,29 @@ public class MainActivity extends AppCompatActivity {
         activity.startActivity(intent);
     }
 
+
+    @SuppressLint("NewApi")
     private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        TAG_ACCESS_FINE_LOCATION);
-
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-//                        TAG_ACCESS_COARSE_LOCATION);
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-
-            return;
+            mFusedLocationClient.getLastLocation()
+                    .addOnCompleteListener(activity, new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                mLastLocation = task.getResult();
+                                Log.i("locationnn",String.valueOf(mLastLocation.getLatitude()));
+                            } else {
+                                Log.i(TAG, "Inside getLocation function. Error while getting location");
+                                System.out.println("Returning null location "+task.getException());
+                            }
+                        }
+                    });
+        }
+        else {
+            String[] permissionRequest = {Manifest.permission.ACCESS_FINE_LOCATION};
+            requestPermissions(permissionRequest, TAG_ACCESS_FINE_LOCATION);
         }
     }
 
@@ -240,7 +238,8 @@ public class MainActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             try {
-                startLocationUpdates();
+
+
                 photoFile = createImageFile();
                 displayMessage(getBaseContext(),photoFile.getAbsolutePath());
 
