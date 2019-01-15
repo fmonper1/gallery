@@ -28,6 +28,8 @@ public class PhotoData {
     private String dateTaken;
     private String latitude;
     private String longitude;
+    private Double latitudeDouble;
+    private Double longitudeDouble;
 
     public PhotoData(String path, String title, String date, String latitude, String longitude) {
         this.id = path;
@@ -37,6 +39,10 @@ public class PhotoData {
         String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(fileData);
         this.dateTaken = formattedDate;
         this.latitude = latitude;
+        if(latitude == null | latitude.length() == 0){
+            this.latitudeDouble = Double.parseDouble(latitude);
+            this.longitudeDouble = Double.parseDouble(longitude);
+        }
         this.longitude = longitude;
         this.description = "Please add a description";
     }
@@ -101,4 +107,19 @@ public class PhotoData {
     }
 
 
+    public Double getLatitudeDouble() {
+        return latitudeDouble;
+    }
+
+    public void setLatitudeDouble(Double latitudeDouble) {
+        this.latitudeDouble = latitudeDouble;
+    }
+
+    public Double getLongitudeDouble() {
+        return longitudeDouble;
+    }
+
+    public void setLongitudeDouble(Double longitudeDouble) {
+        this.longitudeDouble = longitudeDouble;
+    }
 }

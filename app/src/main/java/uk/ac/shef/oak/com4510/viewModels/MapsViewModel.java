@@ -7,6 +7,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import java.util.List;
 
 import uk.ac.shef.oak.com4510.database.PhotoData;
@@ -27,6 +29,12 @@ public class MapsViewModel extends AndroidViewModel {
     public LiveData<List<PhotoData>> getGeoLocatedImages(){
         locationImages = mRepository.findGeoLocatedImages();
 
+        return locationImages;
+    }
+
+    public LiveData<List<PhotoData>> getImagesInsideBounds(LatLngBounds latLngBounds) {
+
+        locationImages = mRepository.findImagesInsideBounds(latLngBounds);
         return locationImages;
     }
 }

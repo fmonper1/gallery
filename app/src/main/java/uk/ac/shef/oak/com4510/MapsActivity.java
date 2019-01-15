@@ -9,30 +9,42 @@ import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
+import uk.ac.shef.oak.com4510.adapters.MapResultsAdapter;
+import uk.ac.shef.oak.com4510.adapters.SearchResultsAdapter;
 import uk.ac.shef.oak.com4510.database.PhotoData;
 import uk.ac.shef.oak.com4510.viewModels.MapsViewModel;
+import uk.ac.shef.oak.com4510.viewModels.SearchViewModel;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
 
     private GoogleMap mMap;
     private MapsViewModel model;
     private Activity context;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +55,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.search_results_recycler);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+//        mLayoutManager = new LinearLayoutManager(this);
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        // specify an adapter (see also next example)
+        mAdapter = new MapResultsAdapter(this);
+//        ((SearchResultsAdapter) mAdapter).setResults(foundItems);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
 
@@ -58,6 +86,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        mMap.setOnCameraIdleListener(this);
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -94,14 +124,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         model.getGeoLocatedImages().observe(this, new Observer<List<PhotoData>>() {
             @Override
             public void onChanged(@Nullable final List<PhotoData> foundItems) {
-                Log.d("mapppp","mapppp");
+                Log.d("mapppp", "mapppp");
                 Log.e("search map results", foundItems.toString());
-                if (foundItems.isEmpty()){
-                    Log.d("failll","failll");
+                if (foundItems.isEmpty()) {
+                    Log.d("failll", "failll");
                 }
                 for (PhotoData temp : foundItems) {
 
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(temp.getLatitude()),Double.valueOf(temp.getLongitude()))).title(temp.getTitle())
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(temp.getLatitude()), Double.valueOf(temp.getLongitude()))).title(temp.getTitle())
                             .snippet("Date Taken: " + temp.getDateTaken() + "\n" + "Description: " + temp.getDescription()));
 
                 }
@@ -113,5 +143,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+    @Override
+    public void onCameraIdle() {
+        Toast.makeText(this, "The camera has stopped moving. Fetch the data from the server!", Toast.LENGTH_SHORT).show();
+        LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+//        fetchData(bounds);
+        model.getImagesInsideBounds(bounds).observe(this, foundItems -> {
+            Log.d("mapppp", "mapppp");
+            Log.e("search map results", foundItems.toString());
+            if (foundItems.isEmpty()) {
+                Log.d("failll", "failll");
+            }
 
+            Log.e("search results", foundItems.toString());
+            ((MapResultsAdapter) mAdapter).setResults(foundItems);
+
+            for (PhotoData temp : foundItems) {
+                mMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(temp.getLatitude()), Double.valueOf(temp.getLongitude()))).title(temp.getTitle())
+                        .snippet("Date Taken: " + temp.getDateTaken() + "\n" + "Description: " + temp.getDescription()));
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onCameraMoveStarted(int i) {
+        mMap.clear();
+
+    }
 }

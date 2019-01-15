@@ -53,4 +53,7 @@ public interface PhotoDAO {
 
     @Query("SELECT COUNT(*) FROM photodata")
     int howManyElements();
+
+    @Query("SELECT * FROM photodata WHERE (CASE WHEN :a < :c THEN latitude BETWEEN :a AND :c ELSE latitudeDouble BETWEEN :c AND :a END) AND(CASE WHEN :b < :d THEN longitudeDouble BETWEEN :b AND :d ELSE longitudeDouble BETWEEN :d AND :b END)")
+    LiveData<List<PhotoData>> findImagesInsideBounds(Double a, Double b, Double c, Double d);
 }

@@ -5,7 +5,7 @@ android {
         debug {
             keyAlias 'com4510'
             keyPassword 'com4510iscool'
-            storeFile file('C:/Users/Rajeev/Downloads/keyStore.jks')
+            storeFile file('../keyStore.jks')
             storePassword 'com4510iscool'
         }
     }
@@ -15,8 +15,8 @@ android {
         applicationId "uk.ac.shef.oak.com4510"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

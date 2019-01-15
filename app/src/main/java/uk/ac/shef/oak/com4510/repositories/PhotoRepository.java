@@ -10,6 +10,8 @@ import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import java.util.List;
 
 import uk.ac.shef.oak.com4510.database.PhotoDAO;
@@ -35,6 +37,14 @@ public class PhotoRepository extends ViewModel {
         LiveData<PhotoData> foundItem = mDBDao.retrievePictureDataLiveData(path);
 
         return foundItem;
+    }
+
+    public LiveData<List<PhotoData>> findImagesInsideBounds(LatLngBounds latLngBounds) {
+        Double a = latLngBounds.southwest.latitude;
+        Double b = latLngBounds.southwest.longitude;
+        Double c = latLngBounds.northeast.latitude;
+        Double d = latLngBounds.northeast.longitude;
+        return mDBDao.findImagesInsideBounds(a, b, c, d);
     }
 
     private static class retrievePictureDataAsyncTask extends AsyncTask<String, Void, Void> {
