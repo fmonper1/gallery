@@ -120,6 +120,7 @@ public class SinglePictureActivity extends AppCompatActivity implements OnMapRea
                         .position(picLocation)
                         .title("Photo was taken here"));
 
+                map.animateCamera(CameraUpdateFactory.zoomTo( 8.0f ) );
                 map.moveCamera(CameraUpdateFactory.newLatLng(picLocation));
             }
         });
