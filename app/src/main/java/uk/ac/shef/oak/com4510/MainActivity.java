@@ -8,25 +8,18 @@ package uk.ac.shef.oak.com4510;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
-import android.os.Build;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -38,18 +31,13 @@ import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import uk.ac.shef.oak.com4510.ui.EditPictureDetailsActivity;
 import uk.ac.shef.oak.com4510.ui.SearchActivity;
 import uk.ac.shef.oak.com4510.viewModels.MainActivityViewModel;
 
@@ -58,16 +46,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -126,15 +106,12 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
+        mRecyclerView = findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         mAdapter= new MainActivityGridAdapter(myPictureList);
         mRecyclerView.setAdapter(mAdapter);
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-
 
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             loadAndDisplayImages();
@@ -144,9 +121,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(permissionRequest, REQUEST_READ_EXTERNAL_STORAGE);
         }
 
-        //getImages();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_camera);
+        FloatingActionButton fab = findViewById(R.id.fab_camera);
         fab.setOnClickListener(view -> {
             startLocationUpdates();
             if(checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -159,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
+        FloatingActionButton fabGallery = findViewById(R.id.fab_gallery);
         fabGallery.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
             startActivity(intent);
@@ -226,8 +201,7 @@ public class MainActivity extends AppCompatActivity {
             if (bestLocation == null) {
                 Log.d(TAG, "startLocationUpdates: nullll");
             }
-            
-        
+
 //            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
 //
 //            mFusedLocationClient.getLastLocation()
@@ -328,8 +302,6 @@ public class MainActivity extends AppCompatActivity {
     private void loadAndDisplayImages() {
         viewModel.getImages().observe(this, (allTheImages) -> {
             myPictureList = allTheImages;
-//            Log.e("images", String.valueOf(allTheImages));
-            // TODO: this isnt done like this... probably...
             mAdapter= new MainActivityGridAdapter(myPictureList);
             mRecyclerView.setAdapter(mAdapter);
 //            mAdapter.notifyDataSetChanged();
