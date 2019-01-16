@@ -11,13 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.shef.oak.com4510.R;
-import uk.ac.shef.oak.com4510.SinglePictureActivity;
+import uk.ac.shef.oak.com4510.ui.SinglePictureActivity;
 import uk.ac.shef.oak.com4510.database.PhotoData;
 
 public class MapResultsAdapter extends RecyclerView.Adapter<MapResultsAdapter.MyViewHolder> {

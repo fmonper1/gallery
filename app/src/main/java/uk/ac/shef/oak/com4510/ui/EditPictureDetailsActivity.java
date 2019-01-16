@@ -1,29 +1,20 @@
 package uk.ac.shef.oak.com4510.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
-import io.reactivex.Single;
 import uk.ac.shef.oak.com4510.R;
-import uk.ac.shef.oak.com4510.SinglePictureActivity;
-import uk.ac.shef.oak.com4510.SinglePictureViewModel;
+import uk.ac.shef.oak.com4510.viewModels.SinglePictureViewModel;
 import uk.ac.shef.oak.com4510.databinding.ActivityEditPictureDetailsBinding;
-import uk.ac.shef.oak.com4510.databinding.ActivitySinglePictureBinding;
 
 public class EditPictureDetailsActivity extends AppCompatActivity {
 

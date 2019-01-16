@@ -1,30 +1,21 @@
 package uk.ac.shef.oak.com4510.ui;
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-
-import java.util.List;
 
 import uk.ac.shef.oak.com4510.R;
-import uk.ac.shef.oak.com4510.SinglePictureViewModel;
 import uk.ac.shef.oak.com4510.adapters.SearchResultsAdapter;
-import uk.ac.shef.oak.com4510.database.PhotoData;
 import uk.ac.shef.oak.com4510.databinding.ActivitySearchBinding;
 import uk.ac.shef.oak.com4510.pojo.FormData;
 import uk.ac.shef.oak.com4510.viewModels.SearchViewModel;

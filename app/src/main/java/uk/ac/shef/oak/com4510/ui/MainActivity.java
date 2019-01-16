@@ -4,7 +4,7 @@
  * some inspiration taken from https://stackoverflow.com/questions/40587168/simple-android-grid-example-using-recyclerview-with-gridlayoutmanager-like-the
  */
 
-package uk.ac.shef.oak.com4510;
+package uk.ac.shef.oak.com4510.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -38,7 +38,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.shef.oak.com4510.ui.SearchActivity;
+import uk.ac.shef.oak.com4510.adapters.MainActivityGridAdapter;
+import uk.ac.shef.oak.com4510.R;
+import uk.ac.shef.oak.com4510.pojo.ImageElement;
 import uk.ac.shef.oak.com4510.viewModels.MainActivityViewModel;
 
 import android.location.Location;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

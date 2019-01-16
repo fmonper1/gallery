@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.shef.oak.com4510.R;
-import uk.ac.shef.oak.com4510.SinglePictureActivity;
+import uk.ac.shef.oak.com4510.ui.SinglePictureActivity;
 import uk.ac.shef.oak.com4510.database.PhotoData;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.MyViewHolder> {

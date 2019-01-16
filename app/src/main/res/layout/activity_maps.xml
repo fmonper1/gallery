@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         map:layout_constraintBottom_toTopOf="@+id/search_results_recycler"
         map:layout_constraintTop_toTopOf="parent"
-        tools:context="uk.ac.shef.oak.com4510.MapsActivity" />
+        tools:context="uk.ac.shef.oak.com4510.ui.MapsActivity" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/search_results_recycler"

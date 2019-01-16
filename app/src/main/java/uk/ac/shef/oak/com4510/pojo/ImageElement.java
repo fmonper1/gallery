@@ -2,7 +2,7 @@
  * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package uk.ac.shef.oak.com4510;
+package uk.ac.shef.oak.com4510.pojo;
 
 import android.graphics.Bitmap;
 
@@ -11,7 +11,7 @@ import android.graphics.Bitmap;
 
 import java.io.File;
 public class ImageElement {
-    int image=-1;
+    public int image=-1;
     File file=null;
     String title;
     String date;

@@ -4,19 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import uk.ac.shef.oak.com4510.ImageElement;
+import uk.ac.shef.oak.com4510.pojo.ImageElement;
 import uk.ac.shef.oak.com4510.repositories.PhotoRepository;
 
 public class MainActivityViewModel extends AndroidViewModel {

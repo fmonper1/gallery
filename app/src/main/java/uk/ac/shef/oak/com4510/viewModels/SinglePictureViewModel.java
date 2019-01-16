@@ -2,7 +2,7 @@
  * Copyright (c) 2018. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package uk.ac.shef.oak.com4510;
+package uk.ac.shef.oak.com4510.viewModels;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -11,6 +11,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.os.Bundle;
 import android.util.Log;
 
+import uk.ac.shef.oak.com4510.pojo.ImageElement;
+import uk.ac.shef.oak.com4510.adapters.MainActivityGridAdapter;
 import uk.ac.shef.oak.com4510.database.PhotoData;
 import uk.ac.shef.oak.com4510.repositories.PhotoRepository;
 
@@ -70,12 +72,12 @@ public class SinglePictureViewModel extends AndroidViewModel {
                 photoDataLiveData = mRepository.getPhotoData(path);
             } else {
                 ImageElement element = MainActivityGridAdapter.getItems().get(position);
-                if (element.image != -1) {
+                if (element.getImage() != -1) {
                     // This is for stuff in res/drawables, we dont need it
                     // imageView.setImageResource(element.image);
-                } else if (element.file != null) {
+                } else if (element.getFile() != null) {
                     // Create an ImageElement for data-binding in the view
-                    photoDataLiveData = mRepository.getPhotoData(element.file.getAbsolutePath());
+                    photoDataLiveData = mRepository.getPhotoData(element.getFile().getAbsolutePath());
                 }
             }
         }
@@ -93,7 +95,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
         int position = b.getInt("position");
         ImageElement element = MainActivityGridAdapter.getItems().get(position);
 
-        mRepository.createNewPhotoData(element.file.getAbsolutePath(), element.title, element.date, element.latitude, element.longitude);
+        mRepository.createNewPhotoData(element.getFile().getAbsolutePath(), element.getTitle(), element.getDate(), element.getLatitude(), element.getLongitude());
     }
 
     /**
@@ -103,9 +105,9 @@ public class SinglePictureViewModel extends AndroidViewModel {
         int position = b.getInt("position");
         ImageElement element = MainActivityGridAdapter.getItems().get(position);
 
-        mRepository.createNewPhotoData(element.file.getAbsolutePath(), element.title, element.date, element.latitude, element.longitude);
+        mRepository.createNewPhotoData(element.getFile().getAbsolutePath(), element.getTitle(), element.getDate(), element.getLatitude(), element.getLongitude());
 
-        photoDataLiveData = mRepository.getPhotoData(element.file.getAbsolutePath());
+        photoDataLiveData = mRepository.getPhotoData(element.getFile().getAbsolutePath());
         return photoDataLiveData;
     }
 

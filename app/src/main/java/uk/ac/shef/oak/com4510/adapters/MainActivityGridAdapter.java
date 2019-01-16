@@ -2,16 +2,15 @@
  * Copyright (c) 2017. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
  */
 
-package uk.ac.shef.oak.com4510;
+package uk.ac.shef.oak.com4510.adapters;
+
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +19,21 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import uk.ac.shef.oak.com4510.R;
+import uk.ac.shef.oak.com4510.pojo.ImageElement;
+import uk.ac.shef.oak.com4510.ui.MainActivity;
+import uk.ac.shef.oak.com4510.ui.SinglePictureActivity;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
+
+public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGridAdapter.View_Holder> {
     static private Context context;
     private static List<ImageElement> items;
 
-    public MyAdapter(List<ImageElement> items) {
+    public MainActivityGridAdapter(List<ImageElement> items) {
         this.items = items;
     }
 
-    public MyAdapter(Context cont, List<ImageElement> items) {
+    public MainActivityGridAdapter(Context cont, List<ImageElement> items) {
         super();
         this.items = items;
         context = cont;
@@ -51,28 +55,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         // Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
         if (holder!=null && items.get(position)!=null) {
-            if (items.get(position).image!=-1) {
-                holder.imageView.setImageResource(items.get(position).image);
-            } else if (items.get(position).file!=null){
+            if (items.get(position).getImage()!=-1) {
+                holder.imageView.setImageResource(items.get(position).getImage());
+            } else if (items.get(position).getFile()!=null){
                 final Bitmap bitmap = getBitmapFromMemCache(String.valueOf(items.get(position)));
                 if (bitmap != null) {
                     holder.imageView.setImageBitmap(bitmap);
                 }
                 else {
                     new UploadSingleImageTask().execute(new HolderAndPosition(position, holder));
-
                 }
             }
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, SinglePictureActivity.class);
-                    intent.putExtra("position", position);
-                    intent.putExtra("path", items.get(position).file.getAbsolutePath());
-                    Log.e("imagePath myAdapter", items.get(position).file.getAbsolutePath());
-
-                    context.startActivity(intent);
-                }
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, SinglePictureActivity.class);
+                intent.putExtra("position", position);
+                intent.putExtra("path", items.get(position).getFile().getAbsolutePath());
+                context.startActivity(intent);
             });
         }
         //animate(holder);
@@ -147,11 +145,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         protected Bitmap doInBackground(HolderAndPosition... holderAndPosition) {
             holdAndPos= holderAndPosition[0];
             Bitmap myBitmap =
-                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).file.getAbsolutePath(), 256, 256);
-//            Bitmap myBitmap = ThumbnailUtils.extractThumbnail(
-//                    BitmapFactory.decodeFile(items.get(holdAndPos.position).file.getAbsolutePath()),
-//                    256,
-//                    256);
+                    decodeSampledBitmapFromResource(items.get(holdAndPos.position).getFile().getAbsolutePath(), 100 , 100);
             addBitmapToMemoryCache(String.valueOf(items.get(holdAndPos.position)), myBitmap);
             return myBitmap;
         }
@@ -180,13 +174,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.View_Holder> {
         }
     }
 
-
-
     public static List<ImageElement> getItems() {
         return items;
     }
 
     public static void setItems(List<ImageElement> items) {
-        MyAdapter.items = items;
+        MainActivityGridAdapter.items = items;
     }
 }

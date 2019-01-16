@@ -1,28 +1,18 @@
-package uk.ac.shef.oak.com4510;
+package uk.ac.shef.oak.com4510.ui;
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -31,13 +21,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.List;
-
+import uk.ac.shef.oak.com4510.R;
 import uk.ac.shef.oak.com4510.adapters.MapResultsAdapter;
-import uk.ac.shef.oak.com4510.adapters.SearchResultsAdapter;
 import uk.ac.shef.oak.com4510.database.PhotoData;
 import uk.ac.shef.oak.com4510.viewModels.MapsViewModel;
-import uk.ac.shef.oak.com4510.viewModels.SearchViewModel;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener {
 
@@ -101,7 +88,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public View getInfoContents(Marker marker) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View v =  inflater.inflate(R.layout.infowindow_layout, null);
+                View v =  inflater.inflate(R.layout.info_window_layout, null);
 
                 TextView title = v.findViewById(R.id.info_window_title);
                 title.setText(marker.getTitle());

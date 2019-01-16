@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.ac.shef.oak.com4510.ImageElement;
+import uk.ac.shef.oak.com4510.pojo.ImageElement;
 import uk.ac.shef.oak.com4510.database.PhotoDAO;
 import uk.ac.shef.oak.com4510.database.MyRoomDatabase;
 import uk.ac.shef.oak.com4510.database.PhotoData;
