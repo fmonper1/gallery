@@ -46,29 +46,33 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.SinglePictureActivity"
             android:label="@string/single_picture_activity_title"
+            android:launchMode="singleTask"
             android:parentActivityName=".ui.MainActivity" />
         <activity
             android:name=".ui.EditPictureDetailsActivity"
             android:label="@string/title_activity_edit_picture_details"
+            android:launchMode="singleTask"
             android:parentActivityName=".ui.SinglePictureActivity" />
         <activity
             android:name=".ui.SearchActivity"
+            android:launchMode="singleTask"
             android:label="@string/search_activity_title">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uk.ac.shef.oak.com4510.ui.MainActivity" />
         </activity>
-        <activity android:name=".ui.SearchResultsActivity" />
+
         <activity
             android:name=".ui.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"
+            android:launchMode="singleTask"
+            android:parentActivityName=".ui.MainActivity" />
     </application>
 
 </manifest>

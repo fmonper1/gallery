@@ -84,9 +84,8 @@ public class SinglePictureActivity extends AppCompatActivity implements OnMapRea
                 binding.setPhotoData(foundItem);
                 // decode the bitmap from the path and set it to and element in the view
 
-                Bitmap myBitmap = BitmapFactory.decodeFile(foundItem.getPath());
-                ImageView imageView = (ImageView) findViewById(R.id.image);
-                imageView.setImageBitmap(myBitmap);
+                ImageView imageView = findViewById(R.id.image);
+                imageView.setImageBitmap(BitmapFactory.decodeFile(foundItem.getPath()));
                 // Set path to a variable so that it can be passed to another activity in an intent
 
                 // Some logging for stuff :)
@@ -100,20 +99,16 @@ public class SinglePictureActivity extends AppCompatActivity implements OnMapRea
                     // Theres coordinates so we can show the map on the UI
                     findViewById(R.id.map_goes_here).setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
         LinearLayout details_container = findViewById(R.id.details_container);
-        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_search);
-        fabGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (details_container.getVisibility()==View.VISIBLE ){
-                    details_container.setVisibility(View.INVISIBLE);
-                } else {
-                    details_container.setVisibility(View.VISIBLE);
-                }
+        FloatingActionButton fabGallery = findViewById(R.id.fab_search);
+        fabGallery.setOnClickListener(view -> {
+            if (details_container.getVisibility()==View.VISIBLE ){
+                details_container.setVisibility(View.INVISIBLE);
+            } else {
+                details_container.setVisibility(View.VISIBLE);
             }
         });
 
@@ -149,7 +144,6 @@ public class SinglePictureActivity extends AppCompatActivity implements OnMapRea
 
     private void setUpToolbar() {
         toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
     }
 
     /*
@@ -174,7 +168,6 @@ public class SinglePictureActivity extends AppCompatActivity implements OnMapRea
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     /*
      * Called when the user taps the Send button on the UI

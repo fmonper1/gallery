@@ -28,19 +28,13 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_picture_details);
         Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         // Get the Intent that started this activity and extract the string
-//        Intent intent = getIntent();
         extras = getIntent().getExtras();
         String imagePath = extras.getString("ImagePath");
-//        Log.d("ImageRe - Intent", imagePath);
         ActivityEditPictureDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_picture_details);
 
         model = ViewModelProviders.of(this).get(SinglePictureViewModel.class);
-
         model.getImageDetails(imagePath).observe(this, foundItem -> {
             binding.setPhotoData(foundItem);
             Bitmap myBitmap = BitmapFactory.decodeFile(foundItem.getPath());
@@ -56,8 +50,6 @@ public class EditPictureDetailsActivity extends AppCompatActivity {
                 Log.e("PhotoRepository - Lon", foundItem.getLongitude());
             }
         });
-
-
     }
 
     @Override

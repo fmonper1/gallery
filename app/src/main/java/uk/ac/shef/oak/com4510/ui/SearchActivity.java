@@ -36,13 +36,6 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-//        toolbar.setTitle(R.string.search_activity_title);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle(R.string.search_activity_title);
-//        getSupportActionBar().setDisplayShowTitleEnabled(true);
-
-
         context = this;
 
         ActivitySearchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
@@ -69,15 +62,12 @@ public class SearchActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
         form_container = findViewById(R.id.form_container);
-        FloatingActionButton fabGallery = (FloatingActionButton) findViewById(R.id.fab_search);
-        fabGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (form_container.getVisibility()==View.VISIBLE && mAdapter.getItemCount()>0){
-                    form_container.setVisibility(View.GONE);
-                } else {
-                    form_container.setVisibility(View.VISIBLE);
-                }
+        FloatingActionButton fabGallery = findViewById(R.id.fab_search);
+        fabGallery.setOnClickListener(view -> {
+            if (form_container.getVisibility()==View.VISIBLE && mAdapter.getItemCount()>0){
+                form_container.setVisibility(View.GONE);
+            } else {
+                form_container.setVisibility(View.VISIBLE);
             }
         });
 
@@ -104,8 +94,6 @@ public class SearchActivity extends AppCompatActivity {
 //            Intent intent = new Intent(this, SearchResultsActivity.class);
 ////            intent.putExtra("queryParams", FormData formData);
 //            context.startActivity(intent);ç
-
-
         }
     }
 
