@@ -36,8 +36,6 @@ public class PhotoRepository extends ViewModel {
 
     public static LruCache<String, Bitmap> mMemoryCache;
 
-
-
     public PhotoRepository(Application application) {
         MyRoomDatabase db = MyRoomDatabase.getDatabase(application);
         mDBDao = db.myDao();
@@ -59,9 +57,11 @@ public class PhotoRepository extends ViewModel {
             }
         };
     }
+
     /**
      * this finds an entry in the DB using the path, if none is found it
      * creates a new entry in the DB
+     * @return the PhotoData found in the database
      */
     public LiveData<PhotoData> getPhotoData(String path) {
         Log.e("PhotoRepository", "getPhotoData - Youre trying to invoke me papi");
@@ -70,6 +70,12 @@ public class PhotoRepository extends ViewModel {
         return foundItem;
     }
 
+    /**
+     * This function separates a LatLngBounds object into coordinates to be used in the DAO. It finds
+     * all the images that exist inside the Map bounds the user is viewing
+     * @param latLngBounds the latitude and longitude bounds from the MapActivity
+     * @return a List of the PhotoData found inside those coordinates
+     */
     public LiveData<List<PhotoData>> findImagesInsideBounds(LatLngBounds latLngBounds) {
         Double a = latLngBounds.southwest.latitude;
         Double b = latLngBounds.southwest.longitude;
@@ -78,6 +84,10 @@ public class PhotoRepository extends ViewModel {
         return mDBDao.findImagesInsideBounds(a, b, c, d);
     }
 
+    /**
+     * This function finds and returns all the images stored in the users device
+     * @return a list of ImageElements containing all the images on the device
+     */
     public List<ImageElement> getImagesFromStorage() {
         int int_position = 0;
         Uri uri;
@@ -138,11 +148,14 @@ public class PhotoRepository extends ViewModel {
 
     }
 
+    /**
+     * Passes a photoData to be updated to the PhotoDAO
+     * @param photoData the PhotoData that is to be updated
+     */
     public void updatePhotoData(PhotoData photoData) {
         Log.e("Repo - updatePhotoData", "Youre trying to invoke me papi");
 //        mDBDao.updatePhotoData(photoData);
         new updatePhotoDataAsyncTask(mDBDao).execute(photoData);
-
     }
 
     private static class updatePhotoDataAsyncTask extends AsyncTask<PhotoData, Void, Void> {
@@ -166,7 +179,12 @@ public class PhotoRepository extends ViewModel {
     }
 
     /**
-     * called by the UI to request the generation of a new random number
+     * Creates a new PhotoData item to be stored on the database
+     * @param path the path to the bitmap of the entity
+     * @param title the title of the entity
+     * @param date the date of the entity
+     * @param lat the latitude of the entity
+     * @param lon the longitude of the entity
      */
     public void createNewPhotoData(String path, String title, String date, String lat, String lon) {
         new createAsyncTask(mDBDao).execute(new PhotoData(path, title, date, lat, lon));
@@ -192,18 +210,38 @@ public class PhotoRepository extends ViewModel {
         }
     }
 
+    /**
+     * Finds a list of PhotoData in the DAO by comparing the titles
+     * @param title the title to be used as a search parameter
+     * @return the List<> of found PhotoData
+     */
     public LiveData<List<PhotoData>> findImagesByTitle(String title) {
         return mDBDao.findImagesByTitle(title);
     }
 
+    /**
+     * Finds a list of PhotoData in the DAO by comparing their descriptions
+     * @param description the description to be used as a search parameter
+     * @return the List<> of found PhotoData
+     */
     public LiveData<List<PhotoData>> findImagesByDescription(String description) {
         return mDBDao.findImagesByDescription(description);
     }
 
+    /**
+     * Finds a list of PhotoData in the DAO by comparing their titles AND descriptions
+     * @param title the title to be used as a search parameter
+     * @param description the description to be used as a search parameter
+     * @return the List<> of found PhotoData
+     */
     public LiveData<List<PhotoData>> findImagesByTitleAndDescription(String title, String description) {
         return mDBDao.findImagesByTitleAndDescription(title, description);
     }
 
+    /**
+     * Finds all the images in the database which have latitude and longitude parameters set
+     * @return the List<> of found PhotoData
+     */
     public LiveData<List<PhotoData>> findGeoLocatedImages(){
         return mDBDao.findGeoLocatedImages();
     }

@@ -43,7 +43,8 @@ public class SinglePictureViewModel extends AndroidViewModel {
     }
 
     /**
-     * getter for the live data
+     * gets the details for an image from the repository given an image path
+     * @param path the path of the desired image
      * @return - photoDataLiveData
      */
     public LiveData<PhotoData> getImageDetails(String path) {
@@ -54,15 +55,17 @@ public class SinglePictureViewModel extends AndroidViewModel {
     }
 
     /**
-     * request by the UI to inspect a single image
+     * Passes the bundle from the MainActivity's adapter with keys position and path.
+     * If the value of position is -1 the path is used to query the database, else the position is
+     * used to retrieve an ImageElement from the gridAdapter and we get the path from that object
+     * @param b bundle that should contain a Int position and String path
+     * @return the live data for the specified image
      */
     public LiveData<PhotoData> getImageDetailsDAO(Bundle b) {
         int position = -1;
         if (theImage == null) {
             theImage = new MutableLiveData<>();
         }
-        // TODO: this has to find an image using the path and not the position so it can be called from
-        // TODO: the SearchViewModel
         if (b != null) {
             position = b.getInt("position");
             String path = b.getString("path");
@@ -72,10 +75,7 @@ public class SinglePictureViewModel extends AndroidViewModel {
                 photoDataLiveData = mRepository.getPhotoData(path);
             } else {
                 ImageElement element = MainActivityGridAdapter.getItems().get(position);
-                if (element.getImage() != -1) {
-                    // This is for stuff in res/drawables, we dont need it
-                    // imageView.setImageResource(element.image);
-                } else if (element.getFile() != null) {
+                if (element.getFile() != null) {
                     // Create an ImageElement for data-binding in the view
                     photoDataLiveData = mRepository.getPhotoData(element.getFile().getAbsolutePath());
                 }
@@ -84,6 +84,10 @@ public class SinglePictureViewModel extends AndroidViewModel {
         return photoDataLiveData;
     }
 
+    /**
+     * getter for the LiveData
+     * @return the liveData stored in the viewmodel
+     */
     public LiveData<PhotoData> getLocalPhotoData() {
         return photoDataLiveData;
     }

@@ -24,8 +24,8 @@ public class SearchViewModel extends AndroidViewModel {
     }
 
     /**
-     * getter for the live data
-     * @return
+     * getter for the form data
+     * @return the form data
      */
     public FormData getFormData() {
         if (formData == null) {

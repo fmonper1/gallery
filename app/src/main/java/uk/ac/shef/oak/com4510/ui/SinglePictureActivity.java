@@ -88,13 +88,7 @@ public class SinglePictureActivity extends AppCompatActivity implements OnMapRea
                 imageView.setImageBitmap(BitmapFactory.decodeFile(foundItem.getPath()));
                 // Set path to a variable so that it can be passed to another activity in an intent
 
-                // Some logging for stuff :)
-                Log.e("PhotoRepository", "Image was found in the database");
-                Log.e("PhotoRepository - Path", foundItem.getPath());
-                Log.e("PhotoRepository - Desc", foundItem.getDescription());
                 if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
-                    Log.e("PhotoRepository - Lat", foundItem.getLatitude());
-                    Log.e("PhotoRepository - Lon", foundItem.getLongitude());
                     mMapFragment.getMapAsync(this);
                     // Theres coordinates so we can show the map on the UI
                     findViewById(R.id.map_goes_here).setVisibility(View.VISIBLE);
@@ -118,9 +112,6 @@ public class SinglePictureActivity extends AppCompatActivity implements OnMapRea
     public void onMapReady(GoogleMap map) {
         model.getLocalPhotoData().observe(this, foundItem -> {
             if (foundItem.getLatitude()!= null &&  foundItem.getLongitude()!= null) {
-                Log.e("mapready - Lat", foundItem.getLatitude());
-                Log.e("mapready - Lon", foundItem.getLongitude());
-
                 lat = Double.parseDouble(foundItem.getLatitude());
                 lon = Double.parseDouble(foundItem.getLongitude());
                 LatLng picLocation = new LatLng(lat,lon);

@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
         PhotoRepository.cache();
 
-        mRecyclerView = findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
+        mRecyclerView = findViewById(R.id.grid_recycler_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         mAdapter= new MainActivityGridAdapter(myPictureList);
         mRecyclerView.setAdapter(mAdapter);
@@ -101,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(permissionRequest, REQUEST_READ_EXTERNAL_STORAGE);
         }
 
+        startLocationUpdates();
+        /*
+         * Setup the FloatingActionButtons
+         */
         FloatingActionButton fab = findViewById(R.id.fab_camera);
         fab.setOnClickListener(view -> {
             startLocationUpdates();
@@ -182,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
             if (bestLocation == null) {
                 Log.d(TAG, "startLocationUpdates: nullll");
             }
-
         }
         else {
             String[] permissionRequest = {Manifest.permission.ACCESS_FINE_LOCATION};
