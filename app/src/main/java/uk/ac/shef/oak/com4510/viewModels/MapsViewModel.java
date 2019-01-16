@@ -26,12 +26,22 @@ public class MapsViewModel extends AndroidViewModel {
         mRepository = new PhotoRepository(application);
     }
 
+    /**
+     * returns a list of live data images returned by the query in the repository
+     * @return
+     */
     public LiveData<List<PhotoData>> getGeoLocatedImages(){
         locationImages = mRepository.findGeoLocatedImages();
 
         return locationImages;
     }
 
+    /**
+     * takes the lat and long boundaries of the map and
+     * returns all images produces from this query in the repository
+     * @param latLngBounds
+     * @return
+     */
     public LiveData<List<PhotoData>> getImagesInsideBounds(LatLngBounds latLngBounds) {
 
         locationImages = mRepository.findImagesInsideBounds(latLngBounds);

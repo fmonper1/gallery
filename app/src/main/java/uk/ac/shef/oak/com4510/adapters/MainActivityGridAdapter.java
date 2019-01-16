@@ -50,6 +50,12 @@ public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGr
         return holder;
     }
 
+    /**
+     * takes the view holder and image position to set
+     * the image to be displayed in the image view.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(final View_Holder holder, final int position) {
 
@@ -99,7 +105,14 @@ public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGr
         }
     }
 
-
+    /**
+     * takes the bitmap options and the required width and height to return
+     * the correct samplesize used to display each image
+     * @param options
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -123,6 +136,14 @@ public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGr
         return inSampleSize;
     }
 
+    /**
+     * takes the image absolute path and the required dimensions to return
+     * a decoded bitmap image
+     * @param imagePath
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
     public static Bitmap decodeSampledBitmapFromResource(String imagePath,
                                                          int reqWidth, int reqHeight) {
 
@@ -156,12 +177,22 @@ public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGr
         }
     }
 
+    /**
+     * adds the decoded bitmap into the applications cache
+     * @param key
+     * @param bitmap
+     */
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null) {
             PhotoRepository.mMemoryCache.put(key, bitmap);
         }
     }
 
+    /**
+     * gets the specified bitmap from the cache using the key
+     * @param key
+     * @return
+     */
     public Bitmap getBitmapFromMemCache(String key) {
         return PhotoRepository.mMemoryCache.get(key);
     }

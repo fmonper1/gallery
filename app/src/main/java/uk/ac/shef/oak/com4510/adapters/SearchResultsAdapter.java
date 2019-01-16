@@ -60,6 +60,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         return vh;
     }
 
+    /**
+     * takes the view holder and image position to set
+     * the image to be displayed in the image view.
+     * @param holder
+     * @param position
+     */
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
@@ -90,6 +96,10 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         }
     }
 
+    /**
+     * sets the search results obtained
+     * @param results
+     */
     public void setResults(List<PhotoData> results) {
         mDataset = results;
         notifyDataSetChanged();
