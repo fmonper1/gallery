@@ -304,31 +304,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * add to the grid
-     * @param returnedPhotos
-     */
-    private void onPhotosReturned(List<File> returnedPhotos) {
-        myPictureList.addAll(getImageElements(returnedPhotos));
-        mAdapter.notifyDataSetChanged();
-        mRecyclerView.scrollToPosition(returnedPhotos.size() - 1);
-    }
-
-
-    /**
-     * given a list of photos, it creates a list of myElements
-     * @param returnedPhotos
-     * @return
-     */
-    private List<ImageElement> getImageElements(List<File> returnedPhotos) {
-        List<ImageElement> imageElementList= new ArrayList<>();
-        for (File file: returnedPhotos){
-            ImageElement element= new ImageElement(file);
-            imageElementList.add(element);
-        }
-        return imageElementList;
-    }
-
     public Activity getActivity() {
         return activity;
     }

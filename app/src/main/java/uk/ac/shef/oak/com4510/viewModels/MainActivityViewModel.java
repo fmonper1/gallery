@@ -38,11 +38,19 @@ public class MainActivityViewModel extends AndroidViewModel {
         return allTheImages;
     }
 
+    /**
+     * gets all the images stored in internal storage
+     * @return
+     */
     public MutableLiveData<List<ImageElement>> getImages() {
         allTheImages.postValue(mRepository.getImagesFromStorage());
         return allTheImages;
     }
 
+    /**
+     * creates a file for the phot using the date as the name of the file
+     * @return
+     */
     @SuppressLint("SimpleDateFormat")
     public File createImageFile() {
         // the public picture director
