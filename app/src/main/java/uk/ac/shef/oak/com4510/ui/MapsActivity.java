@@ -116,9 +116,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onCameraIdle() {
-        Toast.makeText(this, "The camera has stopped moving. Fetch the data from the server!", Toast.LENGTH_SHORT).show();
         LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-//        fetchData(bounds);
         model.getImagesInsideBounds(bounds).observe(this, foundItems -> {
             Log.e("search map results", foundItems.toString());
             if (foundItems.isEmpty()) {
