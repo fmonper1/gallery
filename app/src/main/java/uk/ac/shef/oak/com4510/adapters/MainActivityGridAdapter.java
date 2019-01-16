@@ -21,6 +21,7 @@ import java.util.List;
 
 import uk.ac.shef.oak.com4510.R;
 import uk.ac.shef.oak.com4510.pojo.ImageElement;
+import uk.ac.shef.oak.com4510.repositories.PhotoRepository;
 import uk.ac.shef.oak.com4510.ui.MainActivity;
 import uk.ac.shef.oak.com4510.ui.SinglePictureActivity;
 
@@ -157,12 +158,12 @@ public class MainActivityGridAdapter extends RecyclerView.Adapter<MainActivityGr
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null) {
-            MainActivity.mMemoryCache.put(key, bitmap);
+            PhotoRepository.mMemoryCache.put(key, bitmap);
         }
     }
 
     public Bitmap getBitmapFromMemCache(String key) {
-        return MainActivity.mMemoryCache.get(key);
+        return PhotoRepository.mMemoryCache.get(key);
     }
     private class HolderAndPosition {
         int position;

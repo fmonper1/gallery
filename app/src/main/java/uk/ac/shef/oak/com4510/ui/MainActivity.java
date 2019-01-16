@@ -41,6 +41,7 @@ import java.util.List;
 import uk.ac.shef.oak.com4510.adapters.MainActivityGridAdapter;
 import uk.ac.shef.oak.com4510.R;
 import uk.ac.shef.oak.com4510.pojo.ImageElement;
+import uk.ac.shef.oak.com4510.repositories.PhotoRepository;
 import uk.ac.shef.oak.com4510.viewModels.MainActivityViewModel;
 
 import android.location.Location;
@@ -59,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 4192;
     static final int CAPTURE_IMAGE_REQUEST = 1;
     private static final int TAG_ACCESS_FINE_LOCATION = 123;
-    private static final int TAG_ACCESS_COARSE_LOCATION = 124;
     private static final String TAG = "MainActivity";
     private List<ImageElement> myPictureList = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
@@ -67,15 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityViewModel viewModel;
 
     private LocationManager locationManager;
-    private LocationListener listener;
-    private LocationRequest mLocationRequest;
-    private FusedLocationProviderClient mFusedLocationClient;
-    Location location;
-    double latitude; // Latitude
-    double longitude;
-    private Location mLastLocation;
 
-    public static LruCache<String, Bitmap> mMemoryCache;
     private Activity activity;
 
     // number of columns in recyclerview's grid
@@ -92,21 +84,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         activity= this;
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = 4 * maxMemory / 10;
-
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
+        PhotoRepository.cache();
 
         mRecyclerView = findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
@@ -136,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fabGallery = findViewById(R.id.fab_gallery);
-        fabGallery.setOnClickListener(view -> {
+        FloatingActionButton fabMap = findViewById(R.id.fab_map);
+        fabMap.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
             startActivity(intent);
         });
@@ -182,10 +160,10 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NewApi")
     private void startLocationUpdates() {
         if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-
+            // Create location manager
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             List<String> providers = locationManager.getProviders(true);
-
+            // check the various providers to see which one contains the last known location
             for (String provider : providers) {
                 Location l = locationManager.getLastKnownLocation(provider);
                 Log.d(TAG,"last known location, provider:" + provider + "location: "+ l);
@@ -200,25 +178,11 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
+            // if no last location has been found return null
             if (bestLocation == null) {
                 Log.d(TAG, "startLocationUpdates: nullll");
             }
 
-//            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
-//
-//            mFusedLocationClient.getLastLocation()
-//                    .addOnCompleteListener(activity, new OnCompleteListener<Location>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Location> task) {
-//                            if (task.isSuccessful() && task.getResult() != null) {
-//                                mLastLocation = task.getResult();
-//                                Log.i("locationnn",String.valueOf(mLastLocation.getLatitude()));
-//                            } else {
-//                                Log.i(TAG, "Inside getLocation function. Error while getting location");
-//                                System.out.println("Returning null location "+task.getException());
-//                            }
-//                        }
-//                    });
         }
         else {
             String[] permissionRequest = {Manifest.permission.ACCESS_FINE_LOCATION};
@@ -234,14 +198,13 @@ public class MainActivity extends AppCompatActivity {
             // Create the File where the photo should go
             try {
                 photoFile = createImageFile();
-//                displayMessage(getBaseContext(),photoFile.getAbsolutePath());
+
                 // Continue only if the File was successfully created
                 if (photoFile != null) {
                     Uri photoURI = FileProvider.getUriForFile(this,
                             "uk.ac.shef.oak.com4510.fileprovider",
                             photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-//                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.fromFile(photoFile)));
                     startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST);
                 }
             } catch (Exception ex) {
@@ -320,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
             long time = System.currentTimeMillis()/1000;
             Log.d("currentTimeMs", String.valueOf(time));
             ImageElement newImg;
+            // if location is not null then save the lat and long values
             if (bestLocation != null) {
                  newImg = new ImageElement(photoFile.getAbsoluteFile(), photoFile.getName(), String.valueOf(time), photoFile.getAbsolutePath(), String.valueOf(bestLocation.getLatitude()), String.valueOf(bestLocation.getLongitude()));
             }

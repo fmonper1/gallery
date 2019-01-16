@@ -9,10 +9,12 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.LruCache;
 
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -32,13 +34,31 @@ public class PhotoRepository extends ViewModel {
     private MutableLiveData<List<ImageElement>> allTheImages;
     private Application context;
 
+    public static LruCache<String, Bitmap> mMemoryCache;
+
+
+
     public PhotoRepository(Application application) {
         MyRoomDatabase db = MyRoomDatabase.getDatabase(application);
         mDBDao = db.myDao();
         context = application;
 //        photoDataLiveData = mDBDao.retrievePictureData("");
     }
+    public static void cache() {
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = 4 * maxMemory / 10;
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+    }
     /**
      * this finds an entry in the DB using the path, if none is found it
      * creates a new entry in the DB
