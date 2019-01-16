@@ -39,7 +39,7 @@ public class PhotoData {
         String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(fileData);
         this.dateTaken = formattedDate;
         this.latitude = latitude;
-        if(latitude == null | latitude.length() == 0){
+        if(latitude != null){
             this.latitudeDouble = Double.parseDouble(latitude);
             this.longitudeDouble = Double.parseDouble(longitude);
         }

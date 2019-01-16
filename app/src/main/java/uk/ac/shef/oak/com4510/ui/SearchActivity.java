@@ -99,18 +99,15 @@ public class SearchActivity extends AppCompatActivity {
         } else {
             model.submitFormData();
             model.getAllImages();
-            model.getAllImages().observe(this, new Observer<List<PhotoData>>() {
-                @Override
-                public void onChanged(@Nullable final List<PhotoData> foundItems) {
-                    // Update the cached copy of the words in the adapter.
-    //                adapter.setWords(words);
+            model.getAllImages().observe(this, foundItems -> {
+                // Update the cached copy of the words in the adapter.
+//                adapter.setWords(words);
 
-                    Log.e("search results", foundItems.toString());
+                Log.e("search results", foundItems.toString());
 //                    mAdapter.setResults(foundItems);
-                    ((SearchResultsAdapter) mAdapter).setResults(foundItems);
-                    if (form_container.getVisibility()==View.VISIBLE && !foundItems.isEmpty()) {
-                        form_container.setVisibility(View.GONE);
-                    }
+                ((SearchResultsAdapter) mAdapter).setResults(foundItems);
+                if (form_container.getVisibility()==View.VISIBLE && !foundItems.isEmpty()) {
+                    form_container.setVisibility(View.GONE);
                 }
             });
 //            Intent intent = new Intent(this, SearchResultsActivity.class);

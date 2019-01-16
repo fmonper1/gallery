@@ -28,8 +28,6 @@ import android.support.annotation.RequiresApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -54,10 +52,6 @@ import java.util.List;
 import uk.ac.shef.oak.com4510.ui.EditPictureDetailsActivity;
 import uk.ac.shef.oak.com4510.ui.SearchActivity;
 import uk.ac.shef.oak.com4510.viewModels.MainActivityViewModel;
-
-import pl.aprilapps.easyphotopicker.DefaultCallback;
-import pl.aprilapps.easyphotopicker.EasyImage;
-
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -102,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
     public static LruCache<String, Bitmap> mMemoryCache;
     private Activity activity;
 
+    // number of columns in recyclerview's grid
+    private int numberOfColumns = 4;
+
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +108,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        activity= this;
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
 
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
@@ -129,11 +127,9 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        activity= this;
 
         mRecyclerView = (RecyclerView) findViewById(R.id.grid_recycler_view);
         // set up the RecyclerView
-        int numberOfColumns = 4;
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         mAdapter= new MainActivityGridAdapter(myPictureList);
         mRecyclerView.setAdapter(mAdapter);
@@ -261,11 +257,8 @@ public class MainActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             try {
-
-
                 photoFile = createImageFile();
-                displayMessage(getBaseContext(),photoFile.getAbsolutePath());
-
+//                displayMessage(getBaseContext(),photoFile.getAbsolutePath());
                 // Continue only if the File was successfully created
                 if (photoFile != null) {
                     Uri photoURI = FileProvider.getUriForFile(this,
@@ -280,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                 displayMessage(getBaseContext(),ex.getMessage().toString());
             }
         } else {
-            displayMessage(getBaseContext(),"Nullll");
+            displayMessage(getBaseContext(),"Couldn't resolve intent");
         }
 
     }
@@ -291,18 +284,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File createImageFile() {
-        // the public picture director
-        File picturesDirectory = new File( Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM), "Camera");
-        // timestamp makes unique name.
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        String timestamp = sdf.format(new Date());
-        // put together the directory and the timestamp to make a unique image location.
-        File imageFile = new File(picturesDirectory, "IMG_" + timestamp + ".jpg");
-        return imageFile;
+        return viewModel.createImageFile();
     }
-
-
 
     @SuppressLint("MissingPermission")
     @Override
@@ -313,16 +296,12 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-//                    // permission was granted, yay! Do the
-//                    // contacts-related task you need to do.
+//                    // permission was granted, yay!
                     startLocationUpdates();
                 } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied, boo!
                     Toast.makeText(getApplicationContext(),
-                            "Application will not add location to the pictures without location services!", Toast.LENGTH_SHORT).show();
+                        "Application will not add location to the pictures without location services!", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
@@ -331,11 +310,8 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     loadAndDisplayImages();
-
                 }
-
                 return;
-
             }
 
             case CAMERA_PERMISSION_REQUEST_CODE: {
@@ -346,8 +322,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -361,7 +335,6 @@ public class MainActivity extends AppCompatActivity {
 //            mAdapter.notifyDataSetChanged();
         });
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -418,7 +391,5 @@ public class MainActivity extends AppCompatActivity {
     public Activity getActivity() {
         return activity;
     }
-
-
 
 }

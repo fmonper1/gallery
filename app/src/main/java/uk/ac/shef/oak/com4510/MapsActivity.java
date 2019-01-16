@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,6 +58,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        context = this;
+
         mRecyclerView = (RecyclerView) findViewById(R.id.search_results_recycler);
 
         // use this setting to improve performance if you know that changes
@@ -63,13 +67,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-//        mLayoutManager = new LinearLayoutManager(this);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         // specify an adapter (see also next example)
         mAdapter = new MapResultsAdapter(this);
-//        ((SearchResultsAdapter) mAdapter).setResults(foundItems);
+
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -98,49 +100,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public View getInfoContents(Marker marker) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v =  inflater.inflate(R.layout.infowindow_layout, null);
 
-                Context context = getApplicationContext();
-
-                LinearLayout info = new LinearLayout(context);
-                info.setOrientation(LinearLayout.VERTICAL);
-
-                TextView title = new TextView(context);
-                title.setTextColor(Color.BLACK);
-                title.setGravity(Gravity.CENTER);
-                title.setTypeface(null, Typeface.BOLD);
+                TextView title = v.findViewById(R.id.info_window_title);
                 title.setText(marker.getTitle());
+                TextView date = v.findViewById(R.id.info_window_date);
+                date.setText(marker.getSnippet());
 
-                TextView snippet = new TextView(context);
-                snippet.setTextColor(Color.GRAY);
-                snippet.setText(marker.getSnippet());
-
-                info.addView(title);
-                info.addView(snippet);
-
-                return info;
+                return v;
             }
         });
 
-        model.getGeoLocatedImages().observe(this, new Observer<List<PhotoData>>() {
-            @Override
-            public void onChanged(@Nullable final List<PhotoData> foundItems) {
-                Log.d("mapppp", "mapppp");
-                Log.e("search map results", foundItems.toString());
-                if (foundItems.isEmpty()) {
-                    Log.d("failll", "failll");
-                }
-                for (PhotoData temp : foundItems) {
+        model.getGeoLocatedImages().observe(this, foundItems -> {
+            Log.e("search map results", foundItems.toString());
+            if (foundItems.isEmpty()) {
+                Toast.makeText(this, "No images found :(", Toast.LENGTH_SHORT).show();
+            }
+            for (PhotoData temp : foundItems) {
 
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(temp.getLatitude()), Double.valueOf(temp.getLongitude()))).title(temp.getTitle())
-                            .snippet("Date Taken: " + temp.getDateTaken() + "\n" + "Description: " + temp.getDescription()));
+                mMap.addMarker(new MarkerOptions().position(new LatLng(temp.getLatitudeDouble(),temp.getLongitudeDouble())).title(temp.getTitle())
+                        .snippet("Date Taken: " + temp.getDateTaken() + "\n" + "Description: " + temp.getDescription()));
 
-                }
             }
         });
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     @Override
@@ -149,17 +132,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
 //        fetchData(bounds);
         model.getImagesInsideBounds(bounds).observe(this, foundItems -> {
-            Log.d("mapppp", "mapppp");
             Log.e("search map results", foundItems.toString());
             if (foundItems.isEmpty()) {
                 Log.d("failll", "failll");
             }
-
             Log.e("search results", foundItems.toString());
             ((MapResultsAdapter) mAdapter).setResults(foundItems);
 
             for (PhotoData temp : foundItems) {
-                mMap.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(temp.getLatitude()), Double.valueOf(temp.getLongitude()))).title(temp.getTitle())
+                mMap.addMarker(new MarkerOptions().position(new LatLng(temp.getLatitudeDouble(),temp.getLongitudeDouble())).title(temp.getTitle())
                         .snippet("Date Taken: " + temp.getDateTaken() + "\n" + "Description: " + temp.getDescription()));
 
             }
